@@ -1,6 +1,7 @@
+
 import type { Metadata } from "next";
 import { Providers } from "./providers";
-
+import "@/styles/global.css";
 export const metadata: Metadata = {
   title: "FAP",
   description: "FPT University",
@@ -56,11 +57,12 @@ export default function RootLayout({
                 borderRadius: "50%",
                 animation: "spin 1s linear infinite",
                 margin: "0 auto 16px",
-              }}
-            ></div>
+              }}></div>
           </div>
         </div>
+        {/* <Providers>{children}</Providers> */}
         <Providers>{children}</Providers>
+
         <script
           dangerouslySetInnerHTML={{
             __html: `
