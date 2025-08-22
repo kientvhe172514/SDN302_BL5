@@ -1,28 +1,51 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
-const userSchema = new Schema({
+const userSchema = new Schema(
+  {
     email: {
-        type: String,
-        required: true,
-        unique: true,
-        trim: true,
-        lowercase: true
+      type: String,
+      required: true,
+      unique: true,
+      trim: true,
+      lowercase: true,
     },
     password: {
+      type: String,
+      required: true,
+    },
+    fullName: {
         type: String,
-        required: true
+        required: true,
+        trim: true
+    },
+    dateOfBirth: {
+        type: Date
+    },
+    phoneNumber: {
+        type: String
+    },
+    avatar: {
+        type: String,
+        default: 'default-avatar.png'
     },
     role: {
-        type: String,
-        enum: ['student', 'teacher', 'admin'],
-        default: 'student'
+      type: String,
+      enum: ["student", "teacher", "admin"],
+      default: "student",
     },
-    // Liên kết 1-1 với Profile
-    profile: {
-        type: Schema.Types.ObjectId,
-        ref: 'Profile'
-    }
-}, { timestamps: true });
+  },
+  { timestamps: true }
+);
 
-module.exports = mongoose.model('User', userSchema);
+userSchema.pre("save", async function (next) {
+  if (!this.isModified("password")) return next();
+  try {
+    const salt = await bcrypt.genSalt(10);
+    this.password = await bcrypt.hash(this.password, salt);
+    next();
+  } catch (err) {
+    next(err);
+  }
+});
+module.exports = mongoose.model("User", userSchema);
