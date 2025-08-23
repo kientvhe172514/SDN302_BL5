@@ -26,7 +26,7 @@ class UserService {
         data: userExist,
       };
     } catch (error) {
-      console.log(error);
+      console.log(error.message);
     }
   }
 
@@ -46,7 +46,29 @@ class UserService {
       await newUser.save();
       return { success: true, data: newUser };
     } catch (error) {
-      console.log(error);
+      console.log(error.message);
+    }
+  }
+
+  async getAllUser() {
+    try {
+      const user = await User.find({}).select(
+        "email fullName phoneNumber dateOfBirth role createdAt"
+      );
+      if (!user) {
+        return {
+          success: false,
+          message: "get data failed",
+        };
+      }
+
+      return {
+        success: true,
+        message: "get data successfully",
+        data: user,
+      };
+    } catch (error) {
+      console.log(error.message);
     }
   }
 }

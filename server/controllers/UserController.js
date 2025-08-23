@@ -9,7 +9,7 @@ class UserController {
       const user = await userService.checkUser(userData);
       if (!user.success) {
         res.status(400).json({
-          message:user.message,
+          message: user.message,
         });
         return;
       }
@@ -45,6 +45,33 @@ class UserController {
         success: result.success,
         data: result.data,
         message: "add user successfully",
+      });
+    } catch (error) {
+      res.status(500).json({
+        message: error,
+        status: 400,
+      });
+    }
+  };
+
+  getAllUser = async (req, res, next) => {
+    try {
+      const user = await userService.getAllUser();
+      if(!user.success){
+        res.status(400).json({
+          success: user.success,
+          message: user.message,
+          status: 400
+        })
+
+        return;
+      }
+
+      res.status(200).json({
+        status:200,
+        success: user.success,
+        data: user.data,
+        message: user.message,
       });
     } catch (error) {
       res.status(500).json({
