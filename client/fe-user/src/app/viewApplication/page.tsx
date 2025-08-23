@@ -67,66 +67,7 @@ export default function ViewApplicationPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-purple-50">
-      {/* Header */}
-      <header className="bg-white shadow-sm border-b">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-          <div className="flex justify-between items-start">
-            {/* Left side - Title and Navigation */}
-            <div className="flex-1">
-              <h1 className="text-2xl font-bold text-gray-800 mb-2">
-                FPT University Academic Portal
-              </h1>
-              <nav className="text-sm text-gray-600">
-                <a href="#" className="hover:text-blue-600">Home</a>
-                <span className="mx-2">|</span>
-                <a href="#" className="hover:text-blue-600">View Application</a>
-              </nav>
-            </div>
-
-            {/* Right side - App links, Support, User info */}
-            <div className="flex items-center space-x-6">
-              {/* Mobile App Links */}
-              <div className="text-sm text-gray-600">
-                <p className="mb-2">FAP mobile app (myFAP) is ready at</p>
-                <div className="flex space-x-2">
-                  <button className="inline-flex items-center px-3 py-1 border border-gray-300 rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
-                    <Apple className="w-4 h-4 mr-1" />
-                    Available on the App Store
-                  </button>
-                  <button className="inline-flex items-center px-3 py-1 border border-gray-300 rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
-                    <Play className="w-4 h-4 mr-1" />
-                    GET IT ON Google play
-                  </button>
-                </div>
-              </div>
-
-              {/* Technical Support */}
-              <div className="text-center">
-                <p className="text-sm text-gray-600 mb-1">Hỗ trợ kỹ thuật FAP</p>
-                <div className="w-12 h-12 bg-gray-200 rounded-lg mx-auto"></div>
-              </div>
-
-              {/* User Info */}
-              <div className="text-right">
-                <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800 mb-1">
-                  <User className="w-3 h-3 mr-1" />
-                  thangnmhe176363
-                </span>
-                <div className="flex items-center space-x-2 text-sm">
-                  <button className="inline-flex items-center text-red-600 hover:text-red-700 focus:outline-none">
-                    <LogOut className="w-3 h-3 mr-1" />
-                    logout
-                  </button>
-                  <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800 border border-green-200">
-                    <Building2 className="w-3 h-3 mr-1" />
-                    CAMPUS: FPTU-Hòa Lạc
-                  </span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </header>
+      
 
       {/* Main Content */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -270,32 +211,6 @@ export default function ViewApplicationPage() {
         </div>
       </main>
 
-      {/* Footer */}
-      <footer className="bg-white border-t mt-12">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-          <div className="text-center space-y-2">
-            <p className="text-sm text-gray-600">
-              Mọi góp ý, thắc mắc xin liên hệ: Phòng dịch vụ sinh viên:{" "}
-              <a href="mailto:dichvusinhvien@fe.edu.vn" className="text-blue-600 hover:text-blue-800">
-                <Mail className="w-3 h-3 inline mr-1" />
-                dichvusinhvien@fe.edu.vn
-              </a>
-              .{" "}
-              <a href="tel:02473081313" className="text-blue-600 hover:text-blue-800">
-                <Phone className="w-3 h-3 inline mr-1" />
-                Điện thoại: (024)7308.13.13
-              </a>
-            </p>
-            <hr className="border-gray-200" />
-            <p className="text-xs text-gray-500">
-              © Powered by FPT University |{" "}
-              <a href="#" className="hover:text-blue-600">CMS</a> |{" "}
-              <a href="#" className="hover:text-blue-600">library</a> |{" "}
-              <a href="#" className="hover:text-blue-600">books24x7</a>
-            </p>
-          </div>
-        </div>
-      </footer>
     </div>
   );
 } 

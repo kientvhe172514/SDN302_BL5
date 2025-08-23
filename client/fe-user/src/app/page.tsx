@@ -17,7 +17,7 @@ export default function Home() {
           <li><Link href="/registration/suspend-semester" className="hover:underline text-blue-600">Suspend one semester | Cancel</Link></li>
           <li><Link href="/registration/move-out-class" className="hover:underline text-blue-600">Move out class (Xin chuyển lớp/Tạm ngưng môn)</Link></li>
           <li><Link href="/registration/register-abroad" className="hover:underline text-blue-600">Đăng ký học môn học tại nước ngoài</Link></li>
-          <li><Link href="/home/sendApplication" className="hover:underline text-blue-600">Xem đơn</Link></li>
+          <li><Link href="/sendApplication" className="hover:underline text-blue-600">Xem đơn</Link></li>
 
         </ul>
       </div>
