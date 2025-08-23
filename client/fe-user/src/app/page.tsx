@@ -28,7 +28,7 @@ export default function Home() {
           <li><Link href="/info/timetable" className="hover:underline text-blue-600">University timetable (Lịch học)</Link></li>
           <li><Link href="/info/tuition-fee" className="hover:underline text-blue-600">Tuition fee per course (Biểu học phí)</Link></li>
           <li><Link href="/info/weekly-timetable" className="hover:underline text-blue-600">Weekly timetable (Thời khóa biểu từng tuần)</Link></li>
-          <li><Link href="/info/exam-schedule" className="hover:underline text-blue-600">View exam schedule (Xem lịch thi)</Link></li>
+          <li><Link href="/authentication" className="hover:underline text-blue-600">View exam schedule (Xem lịch thi)</Link></li>
         </ul>
       </div>
     </div>
