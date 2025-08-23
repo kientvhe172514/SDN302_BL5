@@ -1,29 +1,80 @@
 // code mau
-const express = require("express");
 const jwt = require("jsonwebtoken");
-const { checkUser } = require("../services/UserService");
-
+const JWT_SECRET = process.env.JWT_SECRET || "your_jwt_secret";
+const userService = require("../services/UserService");
 class UserController {
-   login = (req, res, next) => {
+  login = async (req, res, next) => {
     try {
-      const { userData } = req.body;
-      const user = checkUser(userData);
-      if (!user) {
-        const accessToken = jwt.sign(
-          { email: user.email, role: user.role },
-          process.env.JWT_SECRET,
-          { expiresIn: "2d" }
-        );
+      const userData = req.body;
+      const user = await userService.checkUser(userData);
+      if (!user.success) {
         res.status(400).json({
-          access_token: accessToken,
+          message: user.message,
         });
         return;
       }
+      const accessToken = jwt.sign(
+        { email: user.data.email, role: user.data.role },
+        JWT_SECRET,
+        { expiresIn: "2d" }
+      );
       res.status(200).json({
         access_token: accessToken,
       });
     } catch (error) {
       res.status(400).json({
+        message: error.message,
+        status: 400,
+      });
+      return;
+    }
+  };
+
+  addUser = async (req, res, next) => {
+    try {
+      const newUser = req.body;
+      const result = await userService.addUser(newUser);
+      if (!result.data) {
+        res.status(400).json({
+          message: result.message,
+        });
+        return;
+      }
+
+      res.status(201).json({
+        success: result.success,
+        data: result.data,
+        message: "add user successfully",
+      });
+    } catch (error) {
+      res.status(500).json({
+        message: error,
+        status: 400,
+      });
+    }
+  };
+
+  getAllUser = async (req, res, next) => {
+    try {
+      const user = await userService.getAllUser();
+      if(!user.success){
+        res.status(400).json({
+          success: user.success,
+          message: user.message,
+          status: 400
+        })
+
+        return;
+      }
+
+      res.status(200).json({
+        status:200,
+        success: user.success,
+        data: user.data,
+        message: user.message,
+      });
+    } catch (error) {
+      res.status(500).json({
         message: error,
         status: 400,
       });
@@ -31,4 +82,4 @@ class UserController {
   };
 }
 
-module.exports = UserController;
+module.exports = new UserController();

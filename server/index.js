@@ -10,7 +10,7 @@ const morgan = require('morgan')
 // error handler
 const globalErrorHandler = require("./middleware/global-error-handler");
 // routes
-
+const indexRouter =  require('./routes/index')
 // middleware
 app.use(cors());
 app.use(express.json());
@@ -23,7 +23,7 @@ connectDB();
 
 // root route
 app.get("/", (req, res) => res.send("Apps worked successfully"));
-
+app.use('/api',indexRouter)
 app.listen(PORT, () => console.log(`server running on port ${PORT}`));
 
 // global error handler

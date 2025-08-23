@@ -7,8 +7,8 @@
     "node": ">=16"
   },
   "scripts": {
-    "start": "node index.js",
-    "build": "node index.js",
+    "start": "nodemon index.js",
+    "build": "nodemon index.js",
     "start-dev": "nodemon index.js",
     "data:import": "node seed.js",
     "test": "echo \"Error: no test specified\" && exit 1"
