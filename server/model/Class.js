@@ -11,8 +11,7 @@ const classSchema = new Schema(
     subject: [
       {
         type: Schema.Types.ObjectId,
-        ref: "Subject",
-        required: true,
+        ref: "Subject"
       },
     ],
     semester: {

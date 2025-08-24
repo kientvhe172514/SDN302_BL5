@@ -5,9 +5,9 @@ class ClassController {
     try {
       const page = parseInt(req.query.page) || 1;
       const limit = parseInt(req.query.limit) || 10;
-      const search = req.query.search || "";
+      const filterSemster = req.query.filter || "";
       const skip = (page - 1) * 10;
-      const classes = await classService.getAll(page, limit, skip, search);
+      const classes = await classService.getAll(page, limit, skip, filterSemster);
       if (!classes) {
         res.status(400).json({
           success: true,
@@ -37,7 +37,7 @@ class ClassController {
 
   addClass = async (req, res, next) => {
     try {
-      const newData = req.body;
+      const newData = req.body.values;
       const result = await classService.addClass(newData);
       if (!result.data) {
         res.status(400).json({

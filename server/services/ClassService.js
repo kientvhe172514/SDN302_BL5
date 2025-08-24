@@ -22,9 +22,9 @@ class ClassService {
     }
   }
 
-  async getAll(page, limit, skip, search) {
+  async getAll(page, limit, skip, filterSemster) {
     try {
-        const filter = search ? { email: { $regex: search, $options: "i" } } : {};
+        const filter = filterSemster ? { semester: { $regex: filterSemster, $options: "i" } } : {};
         const classes = await Class.find(filter).skip(skip).limit(limit);
         const total = await Class.countDocuments();
         return {
