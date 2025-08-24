@@ -32,10 +32,11 @@ class UserController {
 
   addUser = async (req, res, next) => {
     try {
-      const newUser = req.body;
+      const newUser = req.body.values;
       const result = await userService.addUser(newUser);
       if (!result.data) {
         res.status(400).json({
+          success:result.success,
           message: result.message,
         });
         return;
@@ -48,7 +49,7 @@ class UserController {
       });
     } catch (error) {
       res.status(500).json({
-        message: error,
+        message: error.message,
         status: 400,
       });
     }
@@ -56,7 +57,11 @@ class UserController {
 
   getAllUser = async (req, res, next) => {
     try {
-      const user = await userService.getAllUser();
+      const page = parseInt(req.query.page) || 1;
+      const limit = parseInt(req.query.limit) || 10;
+      const search = req.query.search || ''
+      const skip = (page - 1) * 10;
+      const user = await userService.getAllUser(page,limit,skip,search);
       if(!user.success){
         res.status(400).json({
           success: user.success,
@@ -70,7 +75,10 @@ class UserController {
       res.status(200).json({
         status:200,
         success: user.success,
-        data: user.data,
+        data: {
+          users: user.data,
+          pagination: user.pagination
+        },
         message: user.message,
       });
     } catch (error) {

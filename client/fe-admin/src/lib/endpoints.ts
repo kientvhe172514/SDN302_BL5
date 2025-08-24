@@ -23,4 +23,8 @@ export class Endpoints {
     GET_STATS: "subjects/stats",
     GET_BY_CREDITS: "subjects/credits",
   };
+  static readonly User = {
+    GET_ALL: 'user/get-all',
+    ADD_USER: 'user/add-user'
+  }
 }

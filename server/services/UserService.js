@@ -50,11 +50,16 @@ class UserService {
     }
   }
 
-  async getAllUser() {
+  async getAllUser(page, limit, skip, search) {
     try {
-      const user = await User.find({}).select(
-        "email fullName phoneNumber dateOfBirth role createdAt"
-      );
+      const filter = search ? { email: { $regex: search, $options: "i" } } : {};
+
+      const user = await User.find(filter)
+        .skip(skip)
+        .limit(limit)
+        .select("email fullName phoneNumber dateOfBirth role createdAt");
+
+      const total = await User.countDocuments();
       if (!user) {
         return {
           success: false,
@@ -66,6 +71,12 @@ class UserService {
         success: true,
         message: "get data successfully",
         data: user,
+        pagination: {
+          total,
+          page,
+          limit,
+          totalPages: Math.ceil(total / limit),
+        },
       };
     } catch (error) {
       console.log(error.message);
