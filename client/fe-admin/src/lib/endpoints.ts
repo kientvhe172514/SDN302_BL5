@@ -27,4 +27,9 @@ export class Endpoints {
     GET_ALL: 'user/get-all',
     ADD_USER: 'user/add-user'
   }
+
+  static readonly Class = {
+    GET_ALL: 'class/get-class',
+    ADD_CLASS: 'class/add-class'
+  }
 }
