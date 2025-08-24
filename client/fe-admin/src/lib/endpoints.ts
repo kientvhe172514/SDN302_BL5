@@ -12,4 +12,9 @@ export class Endpoints {
     RESEND_REGISTRATION_OTP: "auth/resend-registration-otp",
     SETUP_ACCOUNT: "auth/setup-account",
   };
+
+  static readonly User = {
+    GET_ALL: 'user/get-all',
+    ADD_USER: 'user/add-user'
+  }
 }
