@@ -149,13 +149,26 @@ class SubjectController {
                 }
             ]);
 
+            // Tính min và max credits
+            const minMaxCredits = await Subject.aggregate([
+                {
+                    $group: {
+                        _id: null,
+                        minCredits: { $min: "$credits" },
+                        maxCredits: { $max: "$credits" }
+                    }
+                }
+            ]);
+
             res.status(200).json({
                 status: "success",
                 message: "Subject statistics retrieved successfully",
                 data: {
                     totalSubjects,
                     subjectsByCredits,
-                    averageCredits: avgCredits[0]?.averageCredits || 0
+                    averageCredits: avgCredits[0]?.averageCredits || 0,
+                    minCredits: minMaxCredits[0]?.minCredits || 0,
+                    maxCredits: minMaxCredits[0]?.maxCredits || 0
                 }
             });
         } catch (error) {

@@ -21,6 +21,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 connectDB();
 
 
+
 // root route
 app.get("/", (req, res) => res.send("Apps worked successfully"));
 app.use('/api', indexRouter)
