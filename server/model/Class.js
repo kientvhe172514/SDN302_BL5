@@ -1,25 +1,30 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
-const classSchema = new Schema({
+const classSchema = new Schema(
+  {
     classCode: {
-        type: String,
-        required: true,
-        unique: true
+      type: String,
+      required: true,
+      unique: true,
     },
-    subject: {
+    subject: [
+      {
         type: Schema.Types.ObjectId,
-        ref: 'Subject',
-        required: true
-    },
+        ref: "Subject",
+        required: true,
+      },
+    ],
     semester: {
-        type: String,
-        required: true
+      type: String,
+      required: true,
     },
     maxSize: {
-        type: Number,
-        default: 30
-    }
-}, { timestamps: true });
+      type: Number,
+      default: 30,
+    },
+  },
+  { timestamps: true }
+);
 
-module.exports = mongoose.model('Class', classSchema);
+module.exports = mongoose.model("Class", classSchema);
