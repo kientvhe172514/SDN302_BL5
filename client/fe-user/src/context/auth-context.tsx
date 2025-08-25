@@ -10,7 +10,7 @@ interface AuthContextType {
   isLoggedIn: boolean;
   userInfo: TokenPayload | null;
   loginSuccess: (token: string) => void;
-  setUserInfo: React.Dispatch<React.SetStateAction<any>>;
+  setUserInfo: React.Dispatch<React.SetStateAction<TokenPayload | null>>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -39,7 +39,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       setIsLoggedIn(false);
       localStorage.removeItem(Constants.API_TOKEN_KEY);
       localStorage.removeItem(Constants.API_REFRESH_TOKEN_KEY);
-      router.replace('/authentication/login')
+      router.replace("/authentication/login");
       return;
     }
 

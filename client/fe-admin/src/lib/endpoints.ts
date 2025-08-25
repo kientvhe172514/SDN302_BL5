@@ -13,6 +13,16 @@ export class Endpoints {
     SETUP_ACCOUNT: "auth/setup-account",
   };
 
+  static readonly Subject = {
+    GET_ALL: "subjects",
+    GET_BY_ID: (id: string) => `subjects/${id}`,
+    GET_BY_CODE: (code: string) => `subjects/code/${code}`,
+    CREATE: "subjects",
+    UPDATE: (id: string) => `subjects/${id}`,
+    DELETE: (id: string) => `subjects/${id}`,
+    GET_STATS: "subjects/stats",
+    GET_BY_CREDITS: "subjects/credits",
+  };
   static readonly User = {
     GET_ALL: 'user/get-all',
     ADD_USER: 'user/add-user'

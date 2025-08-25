@@ -1,31 +1,27 @@
 const jwt = require('jsonwebtoken')
 const JWT_SECRET = process.env.JWT_SECRET || 'your_jwt_secret'
-const checkAuth = (req, res, next) => {
-  try {
-    const token = req.headers.authorization?.replace("Bearer","").trim();
-    if (!token) {
-      res.status(401).json({
-        message: "Quyền truy cập bị từ chối",
-      });
-      return;
-    }
-    jwt.verify(token, JWT_SECRET, (err, decoded) => {
-      if (decoded) {
-        next();
+
+const checkAuth = (...allowedRoles) => {
+  return (req, res, next) => {
+    try {
+      if (!req.user) {
+        return res.status(401).json({
+          message: "Quyền truy cập bị từ chối - Không tìm thấy thông tin người dùng",
+        });
       }
 
-      if (err) {
-        res.status(401).json({
-          message: "Không thể xác thực quyền truy cập",
+      if (allowedRoles.length > 0 && !allowedRoles.includes(req.user.role)) {
+        return res.status(403).json({
+          message: "Không có quyền truy cập - Vai trò không phù hợp",
         });
-        return;
       }
-    });
-  } catch (error) {
-    console.error("Auth middleware error:", error);
-    res.status(401).json({ message: "Token không hợp lệ" });
-  }
+
+      next();
+    } catch (error) {
+      console.error("Auth middleware error:", error);
+      return res.status(401).json({ message: "Token không hợp lệ" });
+    }
+  };
 };
 
-
-module.exports = {checkAuth};
+module.exports = { checkAuth };
