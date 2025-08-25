@@ -8,7 +8,7 @@ import {
   CheckCircle,
   Loader2
 } from "lucide-react";
-import applicationService, { ApplicationCategory } from "@/lib/services/application/application.service";
+import { getApplicationCategories, createApplication, ApplicationCategory } from "@/lib/services/application/application.service";
 
 export default function ApplicationPage() {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
@@ -28,9 +28,12 @@ export default function ApplicationPage() {
   const loadApplicationCategories = async () => {
     try {
       setIsLoading(true);
-      const data = await applicationService.getApplicationCategories();
-      const normalized = Array.isArray(data) ? data : [];
-      setCategories(normalized);
+      const response = await getApplicationCategories();
+      if (response.success && response.data) {
+        setCategories(response.data);
+      } else {
+        setMessage({ type: 'error', text: 'Không thể tải danh sách loại đơn' });
+      }
     } catch (error) {
       console.error('Error loading application categories:', error);
       setMessage({ type: 'error', text: 'Không thể tải danh sách loại đơn' });
@@ -62,17 +65,24 @@ export default function ApplicationPage() {
       setIsSubmitting(true);
       setMessage(null);
 
-      await applicationService.createApplication({
+      const response = await createApplication({
         applicationType,
         reason: reason.trim()
       });
 
-      setMessage({ type: 'success', text: 'Đơn đã được gửi thành công!' });
-      
-      // Reset form
-      setApplicationType("");
-      setReason("");
-      setSelectedFile(null);
+      if (response.success) {
+        setMessage({ type: 'success', text: 'Đơn đã được gửi thành công!' });
+        
+        // Reset form
+        setApplicationType("");
+        setReason("");
+        setSelectedFile(null);
+      } else {
+        setMessage({ 
+          type: 'error', 
+          text: response.message || 'Có lỗi xảy ra khi gửi đơn. Vui lòng thử lại.' 
+        });
+      }
       
     } catch (error: any) {
       console.error('Error submitting application:', error);
