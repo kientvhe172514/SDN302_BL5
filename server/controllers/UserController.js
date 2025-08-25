@@ -5,11 +5,12 @@ const userService = require("../services/UserService");
 class UserController {
   login = async (req, res, next) => {
     try {
-      const userData = req.body;
+      const userData = req.body.values;
       const user = await userService.checkUser(userData);
       if (!user.success) {
         res.status(400).json({
           message: user.message,
+          success: user.success
         });
         return;
       }
@@ -19,6 +20,7 @@ class UserController {
         { expiresIn: "2d" }
       );
       res.status(200).json({
+        success:true,
         access_token: accessToken,
       });
     } catch (error) {

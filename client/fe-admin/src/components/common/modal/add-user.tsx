@@ -40,7 +40,13 @@ interface AddUserProps {
 }
 const schema = z.object({
   email: z.string().email("Email không hợp lệ"),
-  password: z.string().min(8, "Mật khẩu ít nhất 8 ký tự"),
+  password: z
+    .string()
+    .min(8, "Mật khẩu ít nhất 8 ký tự")
+    .regex(
+      /^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,}$/,
+      "có ít nhất 1 kí tự đặc biệt và 1 chữ hoa và số"
+    ),
   fullName: z
     .string()
     .max(30, "Tên tối thiểu 2 ký tự")

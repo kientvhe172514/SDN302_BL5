@@ -1,3 +1,4 @@
+"use client";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -9,42 +10,108 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Lock, Mail } from "lucide-react";
 import Image from "next/image";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { AxiosError } from "axios";
+import { showErrorToast } from "@/components/common/toast/toast";
+import { login } from "@/lib/services/auth/auth.service";
+import { Constants } from "@/lib/constants";
+import { useRouter } from "next/navigation";
+const schema = z.object({
+  email: z.string().email("Email không hợp lệ"),
+  password: z
+    .string()
+    .min(8, "Mật khẩu ít nhất 8 ký tự")
+    .regex(
+      /^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,}$/,
+      "có ít nhất 1 kí tự đặc biệt và 1 chữ hoa và số"
+    ),
+});
 
+export type FormValues = z.infer<typeof schema>;
 export default function Page() {
+  const router = useRouter()
+  const form = useForm<FormValues>({
+    resolver: zodResolver(schema),
+    defaultValues: {
+      email: "",
+      password: "",
+    },
+  });
+  const onSubmit = async (value: FormValues) => {
+    try {
+      debugger
+      const response = await login(value);
+      if(response.success){
+        localStorage.setItem(Constants.API_TOKEN_KEY,response.access_token)
+        router.replace('/')
+      }else{
+        showErrorToast(response.message)
+      }
+    } catch (error) {
+      if (error instanceof AxiosError) {
+        showErrorToast(error.response?.data?.message || error.message);
+      } else {
+        showErrorToast("Lỗi không xác định");
+      }
+    }
+  };
   return (
     <Card className="w-full max-w-sm">
       <CardHeader className="flex justify-center items-center">
         <Image alt="FPT" src={"/2021-FPTU-Eng.jpg"} width={200} height={20} />
       </CardHeader>
       <CardContent>
-        <form>
-          <div className="flex flex-col gap-6">
-            <div className="grid gap-2 relative w-full">
-              <Label htmlFor="email">Email</Label>
-              <Mail className="absolute left-3 top-10 -translate-y-1/2 text-gray-400 w-5 h-5" />
-              <Input
-                id="email"
-                type="email"
-                required
-                placeholder="Nhập email"
-                className="pl-10" // chừa khoảng trống để icon không đè chữ
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)}>
+            <div className="flex flex-col gap-6">
+              <FormField
+                control={form.control}
+                name="email"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Email</FormLabel>
+                    <FormControl>
+                      <Input placeholder="example@gmail.com" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="password"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Password</FormLabel>
+                    <FormControl>
+                      <Input
+                        type="password"
+                        placeholder="password"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
               />
             </div>
-            <div className="grid gap-2 relative w-full">
-              <div className="flex items-center">
-                <Label htmlFor="password">Password</Label>
-              </div>
-              <Lock className="absolute left-3 top-10 -translate-y-1/2 text-gray-400 w-5 h-5" />
-              <Input id="password" type="password" placeholder="Nhập password" required className="pl-10" />
-            </div>
-          </div>
-        </form>
+            <Button type="submit" className="w-full mt-4">
+              Login
+            </Button>
+          </form>
+        </Form>
       </CardContent>
-      <CardFooter className="flex-col gap-2">
-        <Button type="submit" className="w-full">
-          Login
-        </Button>
-      </CardFooter>
     </Card>
   );
 }

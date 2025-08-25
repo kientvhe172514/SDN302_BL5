@@ -28,6 +28,8 @@ import { Class } from "@/models/class/class.model";
 import { BookOpen, GraduationCap } from "lucide-react";
 import { useEffect, useState } from "react";
 import useSWR from "swr";
+import Swal from 'sweetalert2'
+import { removeClass } from "@/lib/services/class/class.service";
 
 export default function Page() {
   const [classes, setClasses] = useState<Class[]>([]);
@@ -62,6 +64,28 @@ export default function Page() {
     }
   }, [filterSemester, totalPages]);
 
+  const handleDeleted = async (id: string) => {
+    Swal.fire({
+      title: "Are you sure delete this Class?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, delete it!",
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        const response = await removeClass(id);
+        mutate()
+        Swal.fire({
+          title: "Deleted!",
+          text: `${response.message}`,
+          icon: "success",
+        });
+      }
+    });
+  };
+
   if (error) {
     showErrorToast(error.message);
   }
@@ -89,6 +113,7 @@ export default function Page() {
             onValueChange={(value) => {
               if (value === "all") {
                 setFilterSemester("");
+                return;
               }
               setFilterSemester(value);
             }}
@@ -148,7 +173,10 @@ export default function Page() {
                   }}>
                   Sửa
                 </Button>
-                <Button variant="destructive" size="sm">
+                <Button
+                  variant="destructive"
+                  size="sm"
+                  onClick={() => handleDeleted(cls._id)}>
                   Xóa
                 </Button>
               </CardFooter>
@@ -170,7 +198,12 @@ export default function Page() {
 
       <AddClassModal open={isOpen} setOpen={setIsOpen} mutate={mutate} />
 
-      <EditClassModal open={isEdit} setOpen={setIsEdit} mutate={mutate} id={idEdit}/>
+      <EditClassModal
+        open={isEdit}
+        setOpen={setIsEdit}
+        mutate={mutate}
+        id={idEdit}
+      />
     </div>
   );
 }
