@@ -9,4 +9,5 @@ router.post("/login", userController.login);
 // get all user
 router.get('/get-all', checkAuth, userController.getAllUser)
 
+
 module.exports = router;
