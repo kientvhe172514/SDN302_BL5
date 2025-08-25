@@ -189,7 +189,6 @@ export default function SubjectsPage() {
     value: string | number
   ) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
-    // Clear error when user starts typing
     if (errors[field as keyof SubjectValidationErrors]) {
       setErrors((prev) => ({ ...prev, [field]: undefined }));
     }

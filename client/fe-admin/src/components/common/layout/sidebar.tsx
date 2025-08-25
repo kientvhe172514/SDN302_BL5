@@ -5,7 +5,8 @@ import {
   AppWindow,
   MessageCircle,
   LogOut,
-  House
+  House,
+  BookOpen,
 } from "lucide-react";
 
 import {
@@ -26,13 +27,18 @@ import { usePathname } from "next/navigation";
 const items = [
   {
     title: "Trang chủ",
-    url:'/',
-    icon:House
+    url: "/",
+    icon: House,
   },
   {
     title: "Quản lí user",
     url: "/manage-user",
     icon: UserRound,
+  },
+  {
+    title: "Quản lí môn học",
+    url: "/subjects",
+    icon: BookOpen,
   },
   {
     title: "Lớp học",
@@ -84,7 +90,8 @@ export function AppSidebar() {
                           isActive
                             ? "bg-orange-100 text-orange-600 font-medium"
                             : "text-gray-600 hover:bg-gray-100"
-                        }`}>
+                        }`}
+                      >
                         <item.icon className="h-5 w-5" />
                         <span>{item.title}</span>
                       </a>
@@ -101,7 +108,8 @@ export function AppSidebar() {
           <Button
             aria-label="Logout"
             variant="outline"
-            className="w-full flex items-center justify-center gap-2">
+            className="w-full flex items-center justify-center gap-2"
+          >
             <LogOut className="h-4 w-4" />
             Logout
           </Button>
