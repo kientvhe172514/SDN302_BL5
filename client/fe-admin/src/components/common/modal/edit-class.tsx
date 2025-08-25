@@ -1,3 +1,4 @@
+import { AlertDialogHeader } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -7,23 +8,15 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
 import {
   Form,
+  FormControl,
   FormField,
   FormItem,
   FormLabel,
-  FormControl,
   FormMessage,
 } from "@/components/ui/form";
-import { addUser } from "@/lib/services/user/user.service";
-import { showErrorToast, showSuccessToast } from "../toast/toast";
-import { AxiosError } from "axios";
-import React from "react";
-import { Calendar22 } from "../calendar/calendar";
+import { Input } from "@/components/ui/input";
 import {
   Select,
   SelectContent,
@@ -33,44 +26,38 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-interface AddUserProps {
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { AxiosError } from "axios";
+import { showErrorToast, showSuccessToast } from "../toast/toast";
+import { addClass } from "@/lib/services/class/class.service";
+interface AddClassProps {
   open: boolean;
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
   mutate: () => void;
+  id:string
 }
+
 const schema = z.object({
-  email: z.string().email("Email không hợp lệ"),
-  password: z.string().min(8, "Mật khẩu ít nhất 8 ký tự"),
-  fullName: z
-    .string()
-    .max(30, "Tên tối thiểu 2 ký tự")
-    .regex(/^[A-Za-z\s]+$/, "Tên chỉ được chứa chữ cái và khoảng trắng"),
-  dateOfBirth: z.string().nonempty("Vui lòng nhập ngày sinh"),
-  phoneNumber: z
-    .string()
-    .regex(/^0\d{9}$/, "Số điện thoại không hợp lệ")
-    .max(10, "Số điện thoại phải có 10 chữ số")
-    .min(10, "Số điện thoại phải có 10 chữ số"),
-  role: z.string(),
+  classCode: z.string().regex(/^[A-Z0-9\s-]+$/, "Tên lớp không hợp lệ"),
+  semester: z.string().nonempty("Bắt buộc chọn kì học cho lớp"),
+  maxSize: z.number("Sĩ số phải là số").min(30, "Sĩ số tối thiểu là 30"),
 });
 export type FormValues = z.infer<typeof schema>;
-export function AddUserModal({ open, mutate, setOpen }: AddUserProps) {
-  const [date, setDate] = React.useState<Date | undefined>(new Date());
+export function EditClassModal({ open, mutate, setOpen,id }: AddClassProps) {
   const form = useForm<FormValues>({
     resolver: zodResolver(schema),
     defaultValues: {
-      email: "",
-      password: "",
-      fullName: "",
-      dateOfBirth: "",
-      phoneNumber: "",
-      role: "",
+      classCode: "",
+      semester: "",
+      maxSize: 30,
     },
   });
+
   const onSubmit = async (value: FormValues) => {
     try {
-      debugger;
-      const response = await addUser(value);
+      const response = await addClass(value);
       console.log(response);
       if (response.success) {
         setOpen(false);
@@ -100,9 +87,9 @@ export function AddUserModal({ open, mutate, setOpen }: AddUserProps) {
       <form>
         <DialogContent className="sm:max-w-[425px]">
           <DialogHeader>
-            <DialogTitle>Add new user</DialogTitle>
+            <DialogTitle>Edit Class</DialogTitle>
             <DialogDescription>
-              Add new user to your system here. Click save when you&apos;re
+              Edit class to your system here. Click save when you&apos;re
               done.
             </DialogDescription>
           </DialogHeader>
@@ -111,10 +98,10 @@ export function AddUserModal({ open, mutate, setOpen }: AddUserProps) {
             <form onSubmit={form.handleSubmit(onSubmit)} className="grid gap-4">
               <FormField
                 control={form.control}
-                name="email"
+                name="classCode"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Email</FormLabel>
+                    <FormLabel>Class Name</FormLabel>
                     <FormControl>
                       <Input {...field} />
                     </FormControl>
@@ -125,42 +112,16 @@ export function AddUserModal({ open, mutate, setOpen }: AddUserProps) {
 
               <FormField
                 control={form.control}
-                name="password"
+                name="maxSize"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Password</FormLabel>
+                    <FormLabel>Số học sinh</FormLabel>
                     <FormControl>
-                      <Input type="password" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name="fullName"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Full name</FormLabel>
-                    <FormControl>
-                      <Input {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name="dateOfBirth"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Date of Birth</FormLabel>
-                    <FormControl>
-                      <Calendar22
-                        value={field.value ? new Date(field.value) : undefined}
-                        onChange={(date) => field.onChange(date.toISOString())}
+                      <Input
+                        type="number"
+                        {...field}
+                        value={field.value ?? ""}
+                        onChange={(e) => field.onChange(e.target.valueAsNumber)}
                       />
                     </FormControl>
                     <FormMessage />
@@ -170,36 +131,36 @@ export function AddUserModal({ open, mutate, setOpen }: AddUserProps) {
 
               <FormField
                 control={form.control}
-                name="phoneNumber"
+                name="semester"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Phone</FormLabel>
-                    <FormControl>
-                      <Input {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name="role"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Role</FormLabel>
+                    <FormLabel>Kì học</FormLabel>
                     <FormControl>
                       <Select
                         onValueChange={field.onChange}
                         value={field.value}>
                         <SelectTrigger className="w-full">
-                          <SelectValue placeholder="Select a role" />
+                          <SelectValue placeholder="Select a semester" />
                         </SelectTrigger>
                         <SelectContent>
                           <SelectGroup>
-                            <SelectLabel>Role</SelectLabel>
-                            <SelectItem value="teacher">Teacher</SelectItem>
-                            <SelectItem value="student">Student</SelectItem>
+                            <SelectLabel>Kì học</SelectLabel>
+                            <SelectItem value="all">Tất cả học kỳ</SelectItem>
+                            <SelectItem value="Fall 2023">Fall 2023</SelectItem>
+                            <SelectItem value="Spring 2024">
+                              Spring 2024
+                            </SelectItem>
+                            <SelectItem value="Summer 2024">
+                              Summer 2024
+                            </SelectItem>
+                            <SelectItem value="Fall 2024">Fall 2024</SelectItem>
+                            <SelectItem value="Spring 2025">
+                              Spring 2025
+                            </SelectItem>
+                            <SelectItem value="Summer 2025">
+                              Summer 2025
+                            </SelectItem>
+                            <SelectItem value="Fall 2025">Fall 2025</SelectItem>
                           </SelectGroup>
                         </SelectContent>
                       </Select>

@@ -42,7 +42,7 @@ const items = [
   },
   {
     title: "Lớp học",
-    url: "#",
+    url: "/manage-class",
     icon: School,
   },
   {

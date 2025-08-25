@@ -20,6 +20,7 @@ import { Constants } from "@/lib/constants";
 import Spinner from "@/components/common/spinner/spinner";
 import PaginationConfig from "@/components/common/paging/pagination";
 import { AddUserModal } from "@/components/common/modal/add-user";
+import { NoData } from "@/components/common/nodata/no-data";
 
 export default function Page() {
   const [users, setUsers] = useState<User[]>([]);
@@ -35,13 +36,11 @@ export default function Page() {
     setToken(t);
   }, []);
 
-  
   const [debouncedSearch, setDebouncedSearch] = useState<string>(search);
   useEffect(() => {
     const timer = setTimeout(() => setDebouncedSearch(search), 500);
     return () => clearTimeout(timer);
   }, [search]);
-
 
   const fetcher = async (url: string) => {
     const res = await axiosService.getAxiosInstance().get(url, {
@@ -50,7 +49,7 @@ export default function Page() {
     return res.data.data;
   };
 
-  const { data, error, isLoading,mutate } = useSWR(
+  const { data, error, isLoading, mutate } = useSWR(
     `${Endpoints.User.GET_ALL}?page=${page}&limit=${limit}&search=${debouncedSearch}`,
     fetcher
   );
@@ -61,6 +60,13 @@ export default function Page() {
     }
   }, [data]);
 
+  const totalPages = data ? Math.ceil((data.total || 0) / limit) : 0;
+
+  useEffect(() => {
+    if (page > totalPages) {
+      setPage(1);
+    }
+  }, [totalPages]);
 
   if (error) {
     showErrorToast(error.message);
@@ -164,15 +170,19 @@ export default function Page() {
       </Table>
 
       {/* Pagination */}
-      <PaginationConfig
-        total={data.pagination.total}
-        skip={(page - 1) * limit}
-        limit={limit}
-        onPageChange={(newSkip) => {
-          setPage(newSkip / limit + 1);
-        }}
-      />
-      <AddUserModal open={isOpen} setOpen={setIsOpen} mutate={mutate}/>
+      {users.length > 0 && (
+        <PaginationConfig
+          total={data.pagination.total}
+          skip={(page - 1) * limit}
+          limit={limit}
+          onPageChange={(newSkip) => {
+            setPage(newSkip / limit + 1);
+          }}
+        />
+      )}
+
+      {!data && <NoData />}
+      <AddUserModal open={isOpen} setOpen={setIsOpen} mutate={mutate} />
     </div>
   );
 }
