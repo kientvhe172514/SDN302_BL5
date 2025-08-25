@@ -8,9 +8,15 @@ class WishlistController {
     upsertWishlist = async (req, res, next) => {
         try {
             const { student, subjects, semester } = req.body;
+            console.log('Controller - Upsert wishlist request:', { student, subjects, semester });
+            console.log('Controller - Authenticated user:', req.user);
+            
             const wishlist = await this.wishlistService.upsertWishlist({ student, subjects, semester });
-            res.status(200).json({ status: "success", message: "Wishlist saved", data: wishlist });
+            console.log('Controller - Wishlist upserted:', wishlist);
+            
+            res.status(200).json({ success: true, message: "Wishlist saved", data: wishlist });
         } catch (error) {
+            console.error('Controller - Upsert error:', error);
             next(error);
         }
     };
@@ -18,9 +24,29 @@ class WishlistController {
     getMyWishlist = async (req, res, next) => {
         try {
             const { studentId } = req.params;
+            console.log('Controller - Getting wishlist for student:', studentId);
+            console.log('Controller - Authenticated user:', req.user);
+            
             const wishlist = await this.wishlistService.getWishlistByStudent(studentId);
-            res.status(200).json({ status: "success", message: "Wishlist retrieved", data: wishlist });
+            console.log('Controller - Wishlist found:', wishlist ? 'Yes' : 'No');
+            
+            // Handle case where no wishlist exists - return empty wishlist structure
+            if (!wishlist) {
+                const emptyWishlist = {
+                    _id: null,
+                    student: { _id: studentId, email: "", fullName: "" },
+                    subjects: [],
+                    semester: "",
+                    createdAt: new Date().toISOString(),
+                    updatedAt: new Date().toISOString()
+                };
+                res.status(200).json({ success: true, message: "No wishlist found", data: emptyWishlist });
+                return;
+            }
+            
+            res.status(200).json({ success: true, message: "Wishlist retrieved", data: wishlist });
         } catch (error) {
+            console.error('Controller error:', error);
             next(error);
         }
     };
@@ -28,7 +54,7 @@ class WishlistController {
     listWishlists = async (req, res, next) => {
         try {
             const result = await this.wishlistService.listWishlists(req.query);
-            res.status(200).json({ status: "success", message: "Wishlists retrieved", data: result });
+            res.status(200).json({ success: true, message: "Wishlists retrieved", data: result });
         } catch (error) {
             next(error);
         }
@@ -38,9 +64,15 @@ class WishlistController {
         try {
             const { studentId } = req.params;
             const { subjectIds } = req.body;
+            console.log('Controller - Add subjects request:', { studentId, subjectIds });
+            console.log('Controller - Authenticated user:', req.user);
+            
             const wishlist = await this.wishlistService.addSubjects(studentId, subjectIds);
-            res.status(200).json({ status: "success", message: "Subjects added", data: wishlist });
+            console.log('Controller - Subjects added to wishlist:', wishlist);
+            
+            res.status(200).json({ success: true, message: "Subjects added", data: wishlist });
         } catch (error) {
+            console.error('Controller - Add subjects error:', error);
             next(error);
         }
     };
@@ -49,7 +81,7 @@ class WishlistController {
         try {
             const { studentId, subjectId } = req.params;
             const wishlist = await this.wishlistService.removeSubject(studentId, subjectId);
-            res.status(200).json({ status: "success", message: "Subject removed", data: wishlist });
+            res.status(200).json({ success: true, message: "Subject removed", data: wishlist });
         } catch (error) {
             next(error);
         }
@@ -59,7 +91,7 @@ class WishlistController {
         try {
             const { studentId } = req.params;
             const result = await this.wishlistService.deleteWishlist(studentId);
-            res.status(200).json({ status: "success", message: result.message });
+            res.status(200).json({ success: true, message: result.message });
         } catch (error) {
             next(error);
         }

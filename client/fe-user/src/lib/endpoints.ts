@@ -35,4 +35,16 @@ export class Endpoints {
     GET_TYPES_BY_CATEGORY: (category: string) => `applications/types/category/${category}`,
     GET_CATEGORIES: "applications/types/categories",
   };
+
+  static readonly Wishlist = {
+    // Student endpoints
+    GET_MY_WISHLIST: (studentId: string) => `wishlists/${studentId}`,
+    CREATE_OR_UPDATE: "wishlists",
+    ADD_SUBJECTS: (studentId: string) => `wishlists/${studentId}/subjects`,
+    REMOVE_SUBJECT: (studentId: string, subjectId: string) => `wishlists/${studentId}/subjects/${subjectId}`,
+    DELETE_WISHLIST: (studentId: string) => `wishlists/${studentId}`,
+    
+    // Admin endpoints
+    GET_ALL: "wishlists",
+  };
 }
