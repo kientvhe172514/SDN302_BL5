@@ -46,7 +46,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     setIsLoggedIn(true);
     const decoded = jwtDecode<TokenPayload>(token);
     setUserInfo(decoded);
-    if (decoded.role === "admin" && !currentPath.startsWith("/")) {
+    if ((decoded.role === "teacher" || decoded.role === "student")  && !currentPath.startsWith("/")) {
       router.replace("/");
     }
   }, []);
