@@ -26,7 +26,10 @@ class UserService {
         data: userExist,
       };
     } catch (error) {
-      console.log(error.message);
+      return {
+        success: false,
+        message: "Internal server error",
+      };
     }
   }
 
@@ -42,12 +45,15 @@ class UserService {
         fullName: user.fullName,
         dateOfBirth: user.dateOfBirth,
         phoneNumber: user.phoneNumber,
-        role:user.role
+        role: user.role
       });
       await newUser.save();
       return { success: true, data: newUser };
     } catch (error) {
-      console.log(error.message);
+      return {
+        success: false,
+        message: "Internal server error"
+      };
     }
   }
 
@@ -80,7 +86,83 @@ class UserService {
         },
       };
     } catch (error) {
+      return {
+        success: false,
+        message: "Internal server error",
+      };
+    }
+  }
+
+  async updateProfile(userId, updateData) {
+    try {
+      const { email, ...allowedUpdates } = updateData;
+
+      const allowedFields = ['fullName', 'dateOfBirth', 'phoneNumber', 'avatar'];
+      const filteredUpdates = {};
+
+      Object.keys(allowedUpdates).forEach(key => {
+        if (allowedFields.includes(key) && allowedUpdates[key] !== undefined) {
+          filteredUpdates[key] = allowedUpdates[key];
+        }
+      });
+
+      const updatedUser = await User.findByIdAndUpdate(
+        userId,
+        filteredUpdates,
+        { new: true, runValidators: true }
+      ).select('-password');
+
+      if (!updatedUser) {
+        return {
+          success: false,
+          message: "Không tìm thấy người dùng",
+        };
+      }
+
+      // Convert user to plain object and format dateOfBirth
+      const userData = updatedUser.toObject();
+      if (userData.dateOfBirth) {
+        userData.dateOfBirth = userData.dateOfBirth.toISOString().split('T')[0];
+      }
+
+      return {
+        success: true,
+        message: "Cập nhật thành công",
+        data: userData,
+      };
+    } catch (error) {
+      return {
+        success: false,
+        message: "Cập nhật thất bại",
+      };
+    }
+  }
+
+  async getUserById(userId) {
+    try {
+      const user = await User.findById(userId).select('-password');
+      if (!user) {
+        return {
+          success: false,
+          message: "Không tìm thấy người dùng",
+        };
+      }
+
+      const userData = user.toObject();
+      if (userData.dateOfBirth) {
+        userData.dateOfBirth = userData.dateOfBirth.toISOString().split('T')[0];
+      }
+
+      return {
+        success: true,
+        data: userData,
+      };
+    } catch (error) {
       console.log(error.message);
+      return {
+        success: false,
+        message: "Lấy dữ liệu thất bại",
+      };
     }
   }
 }

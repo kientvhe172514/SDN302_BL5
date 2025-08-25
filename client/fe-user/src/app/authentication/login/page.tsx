@@ -26,6 +26,9 @@ import { showErrorToast } from "@/components/common/toast/toast";
 import { Constants } from "@/lib/constants";
 import { useRouter } from "next/navigation";
 import { login } from "@/lib/services/auth/auth.service";
+import { useAuth } from "@/context/auth-context";
+import profileService from "@/lib/services/profile/profile.service";
+import { setCurrentUser } from "@/utils/getCurrentUser";
 const schema = z.object({
   email: z.string().email("Email không hợp lệ"),
   password: z
@@ -39,7 +42,8 @@ const schema = z.object({
 
 export type FormValues = z.infer<typeof schema>;
 export default function Page() {
-  const router = useRouter()
+  const router = useRouter();
+  const { loginSuccess } = useAuth();
   const form = useForm<FormValues>({
     resolver: zodResolver(schema),
     defaultValues: {
@@ -49,13 +53,29 @@ export default function Page() {
   });
   const onSubmit = async (value: FormValues) => {
     try {
-      debugger
       const response = await login(value);
-      if(response.success){
-        localStorage.setItem(Constants.API_TOKEN_KEY,response.access_token)
-        router.replace('/')
-      }else{
-        showErrorToast(response.message)
+      if (response.success) {
+        // Lưu token và cập nhật auth context
+        loginSuccess(response.access_token);
+
+        // Lưu thông tin user từ response vào currentUser
+        if (response.user) {
+          setCurrentUser(response.user);
+        } else {
+          // Fallback: lấy thông tin profile từ API
+          try {
+            const profileResponse = await profileService.getProfile();
+            if (profileResponse.success && profileResponse.data) {
+              setCurrentUser(profileResponse.data);
+            }
+          } catch (profileError) {
+            console.log("Failed to fetch profile on login:", profileError);
+          }
+        }
+
+        router.replace("/");
+      } else {
+        showErrorToast(response.message);
       }
     } catch (error) {
       if (error instanceof AxiosError) {

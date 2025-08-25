@@ -12,7 +12,7 @@ class AxiosService {
 
   constructor() {
     this.instance = axios.create({
-      baseURL: process.env.NEXT_PUBLIC_API_URL,
+      baseURL: process.env.NEXT_PUBLIC_API_URL || "http://localhost:9999/api",
     });
 
     this.addInterceptors();
@@ -39,19 +39,23 @@ class AxiosService {
           return Promise.reject(error);
         }
 
-       
         if (error.response?.status === 401 && !originalRequest._retry) {
           originalRequest._retry = true;
           try {
-            const refreshToken = localStorage.getItem(Constants.API_REFRESH_TOKEN_KEY);
+            const refreshToken = localStorage.getItem(
+              Constants.API_REFRESH_TOKEN_KEY
+            );
             if (!refreshToken) {
               return Promise.reject(error);
             }
 
             // Gọi API refresh token
-            const refreshResponse = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}${Endpoints.Auth.REFRESH}`, {
-              refresh_token: refreshToken,
-            });
+            const refreshResponse = await axios.post(
+              `${process.env.NEXT_PUBLIC_API_URL}${Endpoints.Auth.REFRESH}`,
+              {
+                refresh_token: refreshToken,
+              }
+            );
 
             const { accessToken } = refreshResponse.data.data.access_token;
 
@@ -75,7 +79,6 @@ class AxiosService {
         return Promise.reject(error);
       }
     );
-
   }
 
   /**

@@ -46,5 +46,17 @@ export class Endpoints {
     
     // Admin endpoints
     GET_ALL: "wishlists",
+    };
+  static readonly Profile = {
+    GET_PROFILE: "user/profile",
+    UPDATE_PROFILE: "user/profile",
+  };
+
+  static readonly Subject = {
+    GET_ALL: "subjects",
+    GET_BY_ID: (id: string) => `subjects/${id}`,
+    GET_BY_CODE: (code: string) => `subjects/code/${code}`,
+    GET_STATS: "subjects/stats",
+    GET_BY_CREDITS: "subjects/credits",
   };
 }
