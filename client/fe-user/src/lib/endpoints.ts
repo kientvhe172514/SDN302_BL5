@@ -12,4 +12,12 @@ export class Endpoints {
     RESEND_REGISTRATION_OTP: "auth/resend-registration-otp",
     SETUP_ACCOUNT: "auth/setup-account",
   };
+
+  static readonly Subject = {
+    GET_ALL: "subjects",
+    GET_BY_ID: (id: string) => `subjects/${id}`,
+    GET_BY_CODE: (code: string) => `subjects/code/${code}`,
+    GET_STATS: "subjects/stats",
+    GET_BY_CREDITS: "subjects/credits",
+  };
 }

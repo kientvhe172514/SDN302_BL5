@@ -20,7 +20,7 @@ class UserController {
         { expiresIn: "2d" }
       );
       res.status(200).json({
-        success:true,
+        success: true,
         access_token: accessToken,
       });
     } catch (error) {
@@ -38,7 +38,7 @@ class UserController {
       const result = await userService.addUser(newUser);
       if (!result.data) {
         res.status(400).json({
-          success:result.success,
+          success: result.success,
           message: result.message,
         });
         return;
@@ -63,8 +63,8 @@ class UserController {
       const limit = parseInt(req.query.limit) || 10;
       const search = req.query.search || ''
       const skip = (page - 1) * 10;
-      const user = await userService.getAllUser(page,limit,skip,search);
-      if(!user.success){
+      const user = await userService.getAllUser(page, limit, skip, search);
+      if (!user.success) {
         res.status(400).json({
           success: user.success,
           message: user.message,
@@ -75,7 +75,7 @@ class UserController {
       }
 
       res.status(200).json({
-        status:200,
+        status: 200,
         success: user.success,
         data: {
           users: user.data,
@@ -87,6 +87,61 @@ class UserController {
       res.status(500).json({
         message: error,
         status: 400,
+      });
+    }
+  };
+
+  updateProfile = async (req, res, next) => {
+    try {
+      const userId = req.user.id;
+      const updateData = req.body;
+
+      const result = await userService.updateProfile(userId, updateData);
+
+      if (!result.success) {
+        res.status(400).json({
+          success: result.success,
+          message: result.message,
+        });
+        return;
+      }
+
+      res.status(200).json({
+        success: result.success,
+        data: result.data,
+        message: result.message,
+      });
+    } catch (error) {
+      res.status(500).json({
+        message: error.message,
+        status: 500,
+      });
+    }
+  };
+
+  getUserProfile = async (req, res, next) => {
+    try {
+      const userId = req.user.id;
+
+      const result = await userService.getUserById(userId);
+
+      if (!result.success) {
+        res.status(400).json({
+          success: result.success,
+          message: result.message,
+        });
+        return;
+      }
+
+      res.status(200).json({
+        success: result.success,
+        data: result.data,
+        message: "Lấy dữ liệu Profile thành công",
+      });
+    } catch (error) {
+      res.status(500).json({
+        message: error.message,
+        status: 500,
       });
     }
   };

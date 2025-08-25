@@ -42,7 +42,7 @@ class UserService {
         fullName: user.fullName,
         dateOfBirth: user.dateOfBirth,
         phoneNumber: user.phoneNumber,
-        role:user.role
+        role: user.role
       });
       await newUser.save();
       return { success: true, data: newUser };
@@ -81,6 +81,67 @@ class UserService {
       };
     } catch (error) {
       console.log(error.message);
+    }
+  }
+
+  async updateProfile(userId, updateData) {
+    try {
+      const { email, ...allowedUpdates } = updateData;
+
+      const allowedFields = ['fullName', 'dateOfBirth', 'phoneNumber', 'avatar'];
+      const filteredUpdates = {};
+
+      Object.keys(allowedUpdates).forEach(key => {
+        if (allowedFields.includes(key) && allowedUpdates[key] !== undefined) {
+          filteredUpdates[key] = allowedUpdates[key];
+        }
+      });
+
+      const updatedUser = await User.findByIdAndUpdate(
+        userId,
+        filteredUpdates,
+        { new: true, runValidators: true }
+      ).select('-password');
+
+      if (!updatedUser) {
+        return {
+          success: false,
+          message: "Không tìm thấy người dùng",
+        };
+      }
+
+      return {
+        success: true,
+        message: "Cập nhật thành công",
+        data: updatedUser,
+      };
+    } catch (error) {
+      return {
+        success: false,
+        message: "Cập nhật thất bại",
+      };
+    }
+  }
+
+  async getUserById(userId) {
+    try {
+      const user = await User.findById(userId).select('-password');
+      if (!user) {
+        return {
+          success: false,
+          message: "Không tìm thấy người dùng",
+        };
+      }
+      return {
+        success: true,
+        data: user,
+      };
+    } catch (error) {
+      console.log(error.message);
+      return {
+        success: false,
+        message: "Lấy dữ liệu thất bại",
+      };
     }
   }
 }

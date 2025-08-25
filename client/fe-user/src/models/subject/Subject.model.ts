@@ -1,52 +1,36 @@
+// Subject data model
 export interface Subject {
   _id: string;
   subjectCode: string;
   name: string;
-  description?: string;
+  description: string;
   credits: number;
   createdAt: string;
   updatedAt: string;
 }
 
+// Subject statistics
 export interface SubjectStats {
   totalSubjects: number;
-  subjectsByCredits: Array<{ _id: number; count: number }>;
   averageCredits: number;
+  minCredits: number;
+  maxCredits: number;
+  subjectsByCredits: Array<{
+    _id: number;
+    count: number;
+  }>;
 }
 
-export interface SubjectQuery {
-  page?: number;
-  limit?: number;
-  search?: string;
-  sortBy?: string;
-  sortOrder?: "asc" | "desc";
-}
-
-export interface CreateSubjectRequest {
-  subjectCode: string;
-  name: string;
-  description?: string;
-  credits: number;
-}
-
-export interface UpdateSubjectRequest {
-  subjectCode?: string;
-  name?: string;
-  description?: string;
-  credits?: number;
-}
-
-export interface SubjectFilterByCredits {
-  minCredits?: number;
-  maxCredits?: number;
-}
-
-// Response interfaces
+// API Response types
 export interface SubjectListResponse {
-  subjects: Subject[];
-  totalPages: number;
-  currentPage: number;
-  totalSubjects: number;
+  status: string;
+  message: string;
+  data: {
+    subjects: Subject[];
+    totalPages: number;
+    currentPage: number;
+    total: number;
+  };
 }
 
 export interface SubjectResponse {
@@ -55,41 +39,22 @@ export interface SubjectResponse {
   data: Subject;
 }
 
-export interface SubjectListApiResponse {
-  status: string;
-  message: string;
-  data: SubjectListResponse;
-}
-
 export interface SubjectStatsResponse {
   status: string;
   message: string;
   data: SubjectStats;
 }
 
-// Form interfaces
-export interface SubjectFormData {
-  subjectCode: string;
-  name: string;
-  description: string;
-  credits: number;
+// Filter types
+export interface SubjectFilterByCredits {
+  minCredits?: number;
+  maxCredits?: number;
 }
 
-// Validation interfaces
-export interface SubjectValidationErrors {
-  subjectCode?: string;
-  name?: string;
-  credits?: string;
-}
-
-// Filter interfaces
-export interface SubjectFilters {
+export interface SubjectQuery {
+  page?: number;
+  limit?: number;
   search?: string;
-  sortBy?: keyof Subject;
+  sortBy?: string;
   sortOrder?: "asc" | "desc";
-  credits?: number[];
-  dateRange?: {
-    start: Date;
-    end: Date;
-  };
 }
