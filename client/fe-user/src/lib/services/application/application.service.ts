@@ -51,8 +51,8 @@ class ApplicationService {
    */
   async createApplication(data: CreateApplicationRequest): Promise<Application> {
     try {
-      const response = await this.axiosInstance.post('/api/applications', data);
-      return response.data;
+      const response = await this.axiosInstance.post('/applications', data);
+      return response.data?.data ?? response.data; // unwrap { data }
     } catch (error) {
       throw error;
     }
@@ -63,8 +63,8 @@ class ApplicationService {
    */
   async getMyApplications(): Promise<Application[]> {
     try {
-      const response = await this.axiosInstance.get('/api/applications/my-applications');
-      return response.data;
+      const response = await this.axiosInstance.get('/applications/my-applications');
+      return response.data?.data ?? response.data;
     } catch (error) {
       throw error;
     }
@@ -75,8 +75,8 @@ class ApplicationService {
    */
   async getApplicationById(id: string): Promise<Application> {
     try {
-      const response = await this.axiosInstance.get(`/api/applications/${id}`);
-      return response.data;
+      const response = await this.axiosInstance.get(`/applications/${id}`);
+      return response.data?.data ?? response.data;
     } catch (error) {
       throw error;
     }
@@ -87,8 +87,8 @@ class ApplicationService {
    */
   async updateApplication(id: string, data: Partial<CreateApplicationRequest>): Promise<Application> {
     try {
-      const response = await this.axiosInstance.put(`/api/applications/${id}`, data);
-      return response.data;
+      const response = await this.axiosInstance.put(`/applications/${id}`, data);
+      return response.data?.data ?? response.data;
     } catch (error) {
       throw error;
     }
@@ -99,7 +99,7 @@ class ApplicationService {
    */
   async deleteApplication(id: string): Promise<void> {
     try {
-      await this.axiosInstance.delete(`/api/applications/${id}`);
+      await this.axiosInstance.delete(`/applications/${id}`);
     } catch (error) {
       throw error;
     }
@@ -110,8 +110,8 @@ class ApplicationService {
    */
   async getApplicationTypes(): Promise<ApplicationType[]> {
     try {
-      const response = await this.axiosInstance.get('/api/applications/types/all');
-      return response.data;
+      const response = await this.axiosInstance.get('/applications/types/all');
+      return response.data?.data ?? response.data;
     } catch (error) {
       throw error;
     }
@@ -122,8 +122,8 @@ class ApplicationService {
    */
   async getApplicationTypesByCategory(category: string): Promise<ApplicationType[]> {
     try {
-      const response = await this.axiosInstance.get(`/api/applications/types/category/${category}`);
-      return response.data;
+      const response = await this.axiosInstance.get(`/applications/types/category/${category}`);
+      return response.data?.data ?? response.data;
     } catch (error) {
       throw error;
     }
@@ -134,8 +134,8 @@ class ApplicationService {
    */
   async getApplicationCategories(): Promise<ApplicationCategory[]> {
     try {
-      const response = await this.axiosInstance.get('/api/applications/types/categories');
-      return response.data;
+      const response = await this.axiosInstance.get('/applications/types/categories');
+      return response.data?.data ?? response.data;
     } catch (error) {
       throw error;
     }
@@ -146,8 +146,8 @@ class ApplicationService {
    */
   async getApplicationStats(): Promise<ApplicationStats[]> {
     try {
-      const response = await this.axiosInstance.get('/api/applications/stats/overview');
-      return response.data;
+      const response = await this.axiosInstance.get('/applications/stats/overview');
+      return response.data?.data ?? response.data;
     } catch (error) {
       throw error;
     }
@@ -158,8 +158,8 @@ class ApplicationService {
    */
   async getApplicationTypeStats(): Promise<ApplicationStats[]> {
     try {
-      const response = await this.axiosInstance.get('/api/applications/stats/by-type');
-      return response.data;
+      const response = await this.axiosInstance.get('/applications/stats/by-type');
+      return response.data?.data ?? response.data;
     } catch (error) {
       throw error;
     }
@@ -181,9 +181,8 @@ class ApplicationService {
           if (value) params.append(key, value);
         });
       }
-      
-      const response = await this.axiosInstance.get(`/api/applications?${params.toString()}`);
-      return response.data;
+      const response = await this.axiosInstance.get(`/applications?${params.toString()}`);
+      return response.data?.data ?? response.data;
     } catch (error) {
       throw error;
     }
@@ -194,8 +193,8 @@ class ApplicationService {
    */
   async getApplicationsByStudent(studentId: string): Promise<Application[]> {
     try {
-      const response = await this.axiosInstance.get(`/api/applications/student/${studentId}`);
-      return response.data;
+      const response = await this.axiosInstance.get(`/applications/student/${studentId}`);
+      return response.data?.data ?? response.data;
     } catch (error) {
       throw error;
     }
@@ -206,8 +205,8 @@ class ApplicationService {
    */
   async processApplication(id: string, status: 'approved' | 'rejected'): Promise<Application> {
     try {
-      const response = await this.axiosInstance.put(`/api/applications/${id}/process`, { status });
-      return response.data;
+      const response = await this.axiosInstance.put(`/applications/${id}/process`, { status });
+      return response.data?.data ?? response.data;
     } catch (error) {
       throw error;
     }

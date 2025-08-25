@@ -2,15 +2,8 @@
 
 import { useState, useEffect } from "react";
 import { 
-  Apple, 
-  Play, 
-  LogOut, 
   Download, 
   FileText, 
-  User,
-  Building2,
-  Mail,
-  Phone,
   AlertCircle,
   CheckCircle,
   Loader2
@@ -36,7 +29,8 @@ export default function ApplicationPage() {
     try {
       setIsLoading(true);
       const data = await applicationService.getApplicationCategories();
-      setCategories(data);
+      const normalized = Array.isArray(data) ? data : [];
+      setCategories(normalized);
     } catch (error) {
       console.error('Error loading application categories:', error);
       setMessage({ type: 'error', text: 'Không thể tải danh sách loại đơn' });

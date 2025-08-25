@@ -1,5 +1,5 @@
 const ApplicationService = require('../services/Application.services');
-const { ApiError } = require('../errors/api-error');
+const ApiError = require('../errors/api-error');
 const { 
     APPLICATION_TYPES, 
     APPLICATION_TYPE_LABELS, 
@@ -231,12 +231,36 @@ class ApplicationController {
         }
     }
 
+    // Helper function để lấy label cho category
+    getCategoryLabel(category) {
+        const categoryLabels = {
+            'ACADEMIC': 'Học tập',
+            'TRANSFER': 'Chuyển đổi',
+            'ENROLLMENT': 'Nhập học',
+            'FINANCIAL': 'Tài chính',
+            'GRADUATION': 'Tốt nghiệp',
+            'EXAMINATION': 'Thi cử',
+            'OTHER': 'Khác'
+        };
+        return categoryLabels[category] || category;
+    }
+
     // Lấy tất cả categories và loại đơn
     async getApplicationCategories(req, res, next) {
         try {
+            const categoryLabels = {
+                'ACADEMIC': 'Học tập',
+                'TRANSFER': 'Chuyển đổi',
+                'ENROLLMENT': 'Nhập học',
+                'FINANCIAL': 'Tài chính',
+                'GRADUATION': 'Tốt nghiệp',
+                'EXAMINATION': 'Thi cử',
+                'OTHER': 'Khác'
+            };
+            
             const categories = Object.keys(APPLICATION_CATEGORIES).map(category => ({
                 category: category,
-                label: this.getCategoryLabel(category),
+                label: categoryLabels[category] || category,
                 types: APPLICATION_CATEGORIES[category].map(type => ({
                     value: type,
                     label: getApplicationTypeLabel(type)
@@ -251,20 +275,6 @@ class ApplicationController {
         } catch (error) {
             next(new ApiError(500, error.message));
         }
-    }
-
-    // Helper method để lấy label cho category
-    getCategoryLabel(category) {
-        const categoryLabels = {
-            'ACADEMIC': 'Học tập',
-            'TRANSFER': 'Chuyển đổi',
-            'ENROLLMENT': 'Nhập học',
-            'FINANCIAL': 'Tài chính',
-            'GRADUATION': 'Tốt nghiệp',
-            'EXAMINATION': 'Thi cử',
-            'OTHER': 'Khác'
-        };
-        return categoryLabels[category] || category;
     }
 }
 
