@@ -1,6 +1,9 @@
 const jwt = require("jsonwebtoken");
 const { promisify } = require("util");
 const { secret } = require("../config/secret");
+
+// Fallback JWT secret if not provided in environment
+const JWT_SECRET = secret.token_secret || "your_super_secret_jwt_token_key_here_2024";
 /**
  * 1. check if token exists
  * 2. if not token send res
@@ -12,14 +15,14 @@ module.exports = async (req, res, next) => {
   try {
     const token = req.headers?.authorization?.split(" ")?.[1];
 
-    if(!token){
+    if (!token) {
       return res.status(401).json({
         status: "fail",
         error: "You are not logged in"
       });
     }
-    
-    const decoded = await promisify(jwt.verify)(token,secret.token_secret);
+
+    const decoded = await promisify(jwt.verify)(token, JWT_SECRET);
 
     req.user = decoded;
 

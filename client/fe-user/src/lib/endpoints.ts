@@ -13,6 +13,11 @@ export class Endpoints {
     SETUP_ACCOUNT: "auth/setup-account",
   };
 
+  static readonly Profile = {
+    GET_PROFILE: "user/profile",
+    UPDATE_PROFILE: "user/profile",
+  };
+
   static readonly Subject = {
     GET_ALL: "subjects",
     GET_BY_ID: (id: string) => `subjects/${id}`,

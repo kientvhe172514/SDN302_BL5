@@ -81,6 +81,14 @@ export default function Home() {
                 View exam schedule (Xem lịch thi)
               </Link>
             </li>
+            <li>
+              <Link
+                href="/profile"
+                className="hover:underline text-blue-600"
+              >
+                User Profile (Thông tin cá nhân)
+              </Link>
+            </li>
           </ul>
         </div>
       </div>

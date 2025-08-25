@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const userController = require('../controllers/UserController');
 const { checkAuth } = require('../middleware/authorization');
-const { verifyToken } = require('../middleware/verifyToken');
+const verifyToken = require('../middleware/verifyToken');
 
 // add a user
 router.post("/add-user", checkAuth, userController.addUser);

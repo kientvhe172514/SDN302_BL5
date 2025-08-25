@@ -110,10 +110,16 @@ class UserService {
         };
       }
 
+      // Convert user to plain object and format dateOfBirth
+      const userData = updatedUser.toObject();
+      if (userData.dateOfBirth) {
+        userData.dateOfBirth = userData.dateOfBirth.toISOString().split('T')[0];
+      }
+
       return {
         success: true,
         message: "Cập nhật thành công",
-        data: updatedUser,
+        data: userData,
       };
     } catch (error) {
       return {
@@ -132,9 +138,15 @@ class UserService {
           message: "Không tìm thấy người dùng",
         };
       }
+
+      const userData = user.toObject();
+      if (userData.dateOfBirth) {
+        userData.dateOfBirth = userData.dateOfBirth.toISOString().split('T')[0];
+      }
+
       return {
         success: true,
-        data: user,
+        data: userData,
       };
     } catch (error) {
       console.log(error.message);

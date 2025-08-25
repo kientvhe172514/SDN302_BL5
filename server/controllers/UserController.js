@@ -1,7 +1,10 @@
 // code mau
 const jwt = require("jsonwebtoken");
-const JWT_SECRET = process.env.JWT_SECRET || "your_jwt_secret";
+const { secret } = require("../config/secret");
 const userService = require("../services/UserService");
+
+// Fallback JWT secret if not provided in environment
+const JWT_SECRET = secret.token_secret || "your_jwt_secret";
 class UserController {
   login = async (req, res, next) => {
     try {
@@ -15,13 +18,34 @@ class UserController {
         return;
       }
       const accessToken = jwt.sign(
-        { email: user.data.email, role: user.data.role },
+        {
+          userId: user.data._id,
+          email: user.data.email,
+          fullname: user.data.fullName,
+          role: user.data.role,
+          avatar: user.data.avatar || ""
+        },
         JWT_SECRET,
         { expiresIn: "2d" }
       );
+
+      // Trả về thông tin user không bao gồm password
+      const userResponse = {
+        _id: user.data._id,
+        email: user.data.email,
+        fullName: user.data.fullName,
+        dateOfBirth: user.data.dateOfBirth,
+        phoneNumber: user.data.phoneNumber,
+        avatar: user.data.avatar,
+        role: user.data.role,
+        createdAt: user.data.createdAt,
+        updatedAt: user.data.updatedAt
+      };
+
       res.status(200).json({
         success: true,
         access_token: accessToken,
+        user: userResponse
       });
     } catch (error) {
       res.status(400).json({
@@ -93,7 +117,7 @@ class UserController {
 
   updateProfile = async (req, res, next) => {
     try {
-      const userId = req.user.id;
+      const userId = req.user.userId;
       const updateData = req.body;
 
       const result = await userService.updateProfile(userId, updateData);
@@ -121,7 +145,7 @@ class UserController {
 
   getUserProfile = async (req, res, next) => {
     try {
-      const userId = req.user.id;
+      const userId = req.user.userId;
 
       const result = await userService.getUserById(userId);
 
