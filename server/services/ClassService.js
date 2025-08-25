@@ -40,6 +40,26 @@ class ClassService {
       console.log(error.message);
     }
   }
+
+  async getById(id){
+    try {
+      const classById = await Class.findById(id);
+      if(!classById){
+        return { 
+          message: 'class does not exist',
+          success:false
+        }
+      }
+
+      return {
+        data: classById,
+        message:'get data successfully',
+        success:true
+      }
+    } catch (error) {
+       return { success: false, message: error.message };
+    }
+  }
 }
 
 module.exports = new ClassService();

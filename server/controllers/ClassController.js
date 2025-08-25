@@ -7,7 +7,12 @@ class ClassController {
       const limit = parseInt(req.query.limit) || 10;
       const filterSemster = req.query.filter || "";
       const skip = (page - 1) * 10;
-      const classes = await classService.getAll(page, limit, skip, filterSemster);
+      const classes = await classService.getAll(
+        page,
+        limit,
+        skip,
+        filterSemster
+      );
       if (!classes) {
         res.status(400).json({
           success: true,
@@ -51,6 +56,29 @@ class ClassController {
         success: result.success,
         data: result.data,
         message: "add class successfully",
+      });
+    } catch (error) {
+      res.status(500).json({
+        message: error,
+        status: 400,
+      });
+    }
+  };
+
+  getClassById = async (req, res, next) => {
+    try {
+      const id = req.params.classId;
+      const result = await classService.getById(id);
+      if (!result.success) {
+        res.status(400).json({
+          message: result.message,
+        });
+        return;
+      }
+      res.status(200).json({
+        success: result.success,
+        data: result.data,
+        message: result.message,
       });
     } catch (error) {
       res.status(500).json({
