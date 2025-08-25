@@ -10,7 +10,31 @@ const applicationSchema = new Schema({
     },
     applicationType: {
         type: String,
-        enum: ['leave_of_absence', 'course_withdrawal', 'suspension'],
+        enum: [
+            'attendance_exemption',                    
+            'transcript_request',                      
+            'credit_transfer',                         
+            'course_switch',                          
+            'grade_review',                           
+            'improvement_exam',                        
+            'other_applications',                     
+            'withdrawal_request',                      
+            'major_transfer',                        
+            'campus_transfer',                       
+            'online_course_assessment',              
+            'money_withdrawal',                      
+            'course_transfer_refund',                
+            'attendance_complaint',                
+            'topj_registration',                   
+            'readmission_request',                  
+            'luk_attendance_support',               
+            'specialized_combo_change',                
+            'early_graduation',                      
+            'thesis_postponement',                
+            'course_withdrawal',                
+            'leave_of_absence',              
+            'suspension'
+        ],
         required: true
     },
     reason: {

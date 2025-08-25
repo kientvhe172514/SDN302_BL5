@@ -10,7 +10,9 @@ const morgan = require('morgan')
 // error handler
 const globalErrorHandler = require("./middleware/global-error-handler");
 // routes
-const indexRouter = require('./routes/index')
+
+const indexRouter =  require('./routes/index')
+const userRoutes = require('./routes/user.routes');
 // middleware
 app.use(cors());
 app.use(express.json());
@@ -19,6 +21,9 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 // connect database
 connectDB();
+
+// API routes
+app.use('/api/users', userRoutes);
 
 
 

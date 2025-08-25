@@ -28,11 +28,11 @@ module.exports = async (req, res, next) => {
 
     next();
 
-
   } catch (error) {
     res.status(403).json({
       status: "fail",
-      error: "Invalid token"
+      error: "Invalid token",
+      details: error.message
     });
   }
 };
