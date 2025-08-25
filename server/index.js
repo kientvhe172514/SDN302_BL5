@@ -13,8 +13,6 @@ const globalErrorHandler = require("./middleware/global-error-handler");
 
 const indexRouter =  require('./routes/index')
 const userRoutes = require('./routes/user.routes');
-const applicationRoutes = require('./routes/Application.routers');
-
 // middleware
 app.use(cors());
 app.use(express.json());
@@ -26,7 +24,6 @@ connectDB();
 
 // API routes
 app.use('/api/users', userRoutes);
-app.use('/api/applications', applicationRoutes);
 
 
 

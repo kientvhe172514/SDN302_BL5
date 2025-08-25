@@ -15,7 +15,7 @@ export default function ApplicationPage() {
   const [applicationType, setApplicationType] = useState<string>("");
   const [reason, setReason] = useState<string>("");
   const [categories, setCategories] = useState<ApplicationCategory[]>([]);
-  const [selectedCategory, setSelectedCategory] = useState<string>("ACADEMIC");
+  const [selectedCategory, setSelectedCategory] = useState<string>("ALL");
   const [isLoading, setIsLoading] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
@@ -86,6 +86,11 @@ export default function ApplicationPage() {
   };
 
   const getCurrentCategoryTypes = () => {
+    if (selectedCategory === 'ALL') {
+      const all = categories.flatMap(c => c.types);
+      const dedup = Array.from(new Map(all.map(t => [t.value, t])).values());
+      return dedup;
+    }
     const category = categories.find(cat => cat.category === selectedCategory);
     return category ? category.types : [];
   };
@@ -155,6 +160,7 @@ export default function ApplicationPage() {
                   disabled={isLoading}
                   className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 disabled:bg-gray-100"
                 >
+                  <option value="ALL">Tất cả danh mục</option>
                   {isLoading ? (
                     <option>Đang tải...</option>
                   ) : (
