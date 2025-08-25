@@ -166,9 +166,9 @@ export default function ViewApplicationPage() {
                           <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                             Ngày cập nhật
                           </th>
-                          <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          {/* <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                             Thao tác
-                          </th>
+                          </th> */}
                         </tr>
                       </thead>
                       <tbody className="bg-white divide-y divide-gray-200">
@@ -189,14 +189,8 @@ export default function ViewApplicationPage() {
                             <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                               {formatDate(application.updatedAt)}
                             </td>
-                            <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                            {/* <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                               <div className="flex space-x-2">
-                                <button
-                                  className="text-blue-600 hover:text-blue-900"
-                                  title="Xem chi tiết"
-                                >
-                                  <Eye className="w-4 h-4" />
-                                </button>
                                 {application.status === 'pending' && (
                                   <>
                                     <button
@@ -214,7 +208,7 @@ export default function ViewApplicationPage() {
                                   </>
                                 )}
                               </div>
-                            </td>
+                            </td> */}
                           </tr>
                         ))}
                       </tbody>

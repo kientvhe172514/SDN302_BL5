@@ -64,7 +64,8 @@ export default function ApplicationPage() {
     try {
       setIsSubmitting(true);
       setMessage(null);
-
+      debugger
+      
       const response = await createApplication({
         applicationType,
         reason: reason.trim()

@@ -15,7 +15,7 @@ class UserController {
         return;
       }
       const accessToken = jwt.sign(
-        { email: user.data.email, role: user.data.role },
+        { email: user.data.email, role: user.data.role, id: user.data._id },
         JWT_SECRET,
         { expiresIn: "2d" }
       );

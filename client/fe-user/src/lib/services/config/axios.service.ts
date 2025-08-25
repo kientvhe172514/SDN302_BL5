@@ -53,11 +53,7 @@ class AxiosService {
               refresh_token: refreshToken,
             });
 
-            // Extract access token from response
-            const accessToken = refreshResponse.data?.data?.access_token || refreshResponse.data?.access_token;
-            if (!accessToken) {
-              throw new Error("Cannot extract access token from refresh response");
-            }
+            const { accessToken } = refreshResponse.data.data.access_token;
 
             // Lưu lại token mới
             localStorage.setItem(Constants.API_TOKEN_KEY, accessToken);
