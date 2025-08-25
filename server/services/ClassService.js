@@ -22,9 +22,9 @@ class ClassService {
     }
   }
 
-  async getAll(page, limit, skip, search) {
+  async getAll(page, limit, skip, filterSemster) {
     try {
-        const filter = search ? { email: { $regex: search, $options: "i" } } : {};
+        const filter = filterSemster ? { semester: { $regex: filterSemster, $options: "i" } } : {};
         const classes = await Class.find(filter).skip(skip).limit(limit);
         const total = await Class.countDocuments();
         return {
@@ -38,6 +38,26 @@ class ClassService {
       };
     } catch (error) {
       console.log(error.message);
+    }
+  }
+
+  async getById(id){
+    try {
+      const classById = await Class.findById(id);
+      if(!classById){
+        return { 
+          message: 'class does not exist',
+          success:false
+        }
+      }
+
+      return {
+        data: classById,
+        message:'get data successfully',
+        success:true
+      }
+    } catch (error) {
+       return { success: false, message: error.message };
     }
   }
 }

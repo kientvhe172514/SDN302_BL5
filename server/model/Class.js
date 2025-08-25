@@ -8,13 +8,10 @@ const classSchema = new Schema(
       required: true,
       unique: true,
     },
-    subject: [
-      {
-        type: Schema.Types.ObjectId,
-        ref: "Subject",
-        required: true,
-      },
-    ],
+    subject: {
+      type: Schema.Types.ObjectId,
+      ref: "Subject",
+    },
     semester: {
       type: String,
       required: true,
