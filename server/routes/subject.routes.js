@@ -6,19 +6,19 @@ const { checkAuth } = require('../middleware/authorization');
 
 const subjectController = new SubjectController();
 
-router.get('/stats', subjectController.getSubjectsStats);
-router.get('/credits', subjectController.getSubjectsByCredits);
+router.get('/stats',checkAuth, subjectController.getSubjectsStats);
+router.get('/credits',checkAuth, subjectController.getSubjectsByCredits);
 
 // router.use(verifyToken);
 
 // Admin only routes
-router.post('/', subjectController.createSubject);
-router.put('/:id', subjectController.updateSubject);
-router.delete('/:id', subjectController.deleteSubject);
+router.post('/',checkAuth, subjectController.createSubject);
+router.put('/:id',checkAuth, subjectController.updateSubject);
+router.delete('/:id',checkAuth, subjectController.deleteSubject);
 
 // Admin and teacher routes
-router.get('/', subjectController.getAllSubjects);
-router.get('/:id', subjectController.getSubjectById);
-router.get('/code/:subjectCode', subjectController.getSubjectByCode);
+router.get('/',checkAuth, subjectController.getAllSubjects);
+router.get('/:id',checkAuth, subjectController.getSubjectById);
+router.get('/code/:subjectCode',checkAuth, subjectController.getSubjectByCode);
 
 module.exports = router;

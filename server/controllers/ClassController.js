@@ -87,6 +87,53 @@ class ClassController {
       });
     }
   };
+
+  updateAll = async (req, res, next) => {
+    try {
+      const id = req.params.id;
+      const updateData = req.body.values;
+      const result = await classService.updateClass(id, updateData);
+      if (!result.success) {
+        res.status(400).json({
+          message: result.message,
+        });
+        return;
+      }
+      res.status(200).json({
+        success: result.success,
+        data: result.data,
+        message: result.message,
+      });
+    } catch (error) {
+      res.status(500).json({
+        message: error,
+        status: 400,
+      });
+    }
+  };
+
+  deleteClass = async (req, res, next) => {
+    try {
+      const id = req.params.id;
+      const result = await classService.deleteClass(id);
+      if (!result.success) {
+        res.status(400).json({
+          message: result.message,
+        });
+        return;
+      }
+      res.status(200).json({
+        success: result.success,
+        data: result.data,
+        message: result.message,
+      });
+    } catch (error) {
+      res.status(500).json({
+        message: error,
+        status: 400,
+      });
+    }
+  };
 }
 
 module.exports = new ClassController();

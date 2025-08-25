@@ -1,7 +1,7 @@
 export class Endpoints {
   static readonly Auth = {
     REFRESH: "auth/refresh",
-    LOGIN: "auth/login",
+    LOGIN: "user/login",
     LOGIN_WITH_GOOGLE: "auth/google-login",
     FORGOT_PASSWORD: "auth/forgot-password",
     CHANGE_PASSWORD: "auth/change-password",
@@ -30,6 +30,9 @@ export class Endpoints {
 
   static readonly Class = {
     GET_ALL: 'class/get-class',
-    ADD_CLASS: 'class/add-class'
+    ADD_CLASS: 'class/add-class',
+    GET_BY_ID: (id:string) => `class/get-class/${id}`,
+    UPDATE_CLASS: (id:string) => `class/update-class/${id}`,
+    DELETE_CLASS: (id:string) => `class/delete/${id}`
   }
 }

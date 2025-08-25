@@ -31,33 +31,81 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { AxiosError } from "axios";
 import { showErrorToast, showSuccessToast } from "../toast/toast";
-import { addClass } from "@/lib/services/class/class.service";
+import { addClass, updateClass } from "@/lib/services/class/class.service";
+import { useEffect, useState } from "react";
+import { Class } from "@/models/class/class.model";
+import axiosService from "@/lib/services/config/axios.service";
+import useSWR from "swr";
+import { Endpoints } from "@/lib/endpoints";
+import { Subject } from "@/models/subject";
 interface AddClassProps {
   open: boolean;
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
   mutate: () => void;
-  id:string
+  id: string;
 }
 
 const schema = z.object({
   classCode: z.string().regex(/^[A-Z0-9\s-]+$/, "Tên lớp không hợp lệ"),
   semester: z.string().nonempty("Bắt buộc chọn kì học cho lớp"),
-  maxSize: z.number("Sĩ số phải là số").min(30, "Sĩ số tối thiểu là 30"),
+  subject: z.string().nonempty("Bắt buộc chọn môn học cho lớp"),
+  maxSize: z.number("Sĩ số phải là số").min(30, "Sĩ số tối thiểu là 30").max(70,"Sĩ số tối đa là 70"),
 });
 export type FormValues = z.infer<typeof schema>;
-export function EditClassModal({ open, mutate, setOpen,id }: AddClassProps) {
+export function EditClassModal({ open, mutate, setOpen, id }: AddClassProps) {
+  const [classEdit, setClassEdit] = useState<Class | null>(null);
+  const [subjects, setSubject] = useState<Subject[]>([]);
+  const fetcher = async (url: string) => {
+    const res = await axiosService.getAxiosInstance().get(url);
+    return res.data.data;
+  };
+  const { data, error, isLoading } = useSWR(
+    `${Endpoints.Class.GET_BY_ID(id)}`,
+    fetcher
+  );
+
+  const {
+    data: dataSubject,
+    error: errSubject,
+    isLoading: isLoadingSubject,
+  } = useSWR(`${Endpoints.Subject.GET_ALL}`, fetcher);
+
+  useEffect(() => {
+    if (data) {
+      setClassEdit(data);
+    }
+  }, [data]);
+
+  useEffect(() => {
+    if (dataSubject) {
+      setSubject(dataSubject.subjects);
+    }
+  }, [dataSubject]);
+
   const form = useForm<FormValues>({
     resolver: zodResolver(schema),
     defaultValues: {
       classCode: "",
       semester: "",
+      subject: "",
       maxSize: 30,
     },
   });
 
+  useEffect(() => {
+    if (classEdit) {
+      form.reset({
+        classCode: classEdit.classCode,
+        maxSize: classEdit.maxSize,
+        subject: classEdit.subject?._id ?? "", // lấy _id của subject
+        semester: classEdit.semester ?? "",
+      });
+    }
+  }, [classEdit]);
+
   const onSubmit = async (value: FormValues) => {
     try {
-      const response = await addClass(value);
+      const response = await updateClass(value,id);
       console.log(response);
       if (response.success) {
         setOpen(false);
@@ -89,8 +137,7 @@ export function EditClassModal({ open, mutate, setOpen,id }: AddClassProps) {
           <DialogHeader>
             <DialogTitle>Edit Class</DialogTitle>
             <DialogDescription>
-              Edit class to your system here. Click save when you&apos;re
-              done.
+              Edit class to your system here. Click save when you&apos;re done.
             </DialogDescription>
           </DialogHeader>
           {/* Form */}
@@ -103,7 +150,10 @@ export function EditClassModal({ open, mutate, setOpen,id }: AddClassProps) {
                   <FormItem>
                     <FormLabel>Class Name</FormLabel>
                     <FormControl>
-                      <Input {...field} />
+                      <Input
+                        {...field}
+                        value={field.value}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -120,9 +170,40 @@ export function EditClassModal({ open, mutate, setOpen,id }: AddClassProps) {
                       <Input
                         type="number"
                         {...field}
-                        value={field.value ?? ""}
+                        value={field.value}
                         onChange={(e) => field.onChange(e.target.valueAsNumber)}
                       />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="subject"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Môn học</FormLabel>
+                    <FormControl>
+                      <Select
+                        onValueChange={field.onChange}
+                        value={field.value}>
+                        <SelectTrigger className="w-full">
+                          <SelectValue placeholder="Select a semester" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectGroup>
+                            <SelectLabel>Môn học</SelectLabel>
+                            {Array.isArray(subjects) &&
+                              subjects.map((e) => (
+                                <SelectItem value={e._id} key={e._id}>
+                                  {e.subjectCode}
+                                </SelectItem>
+                              ))}
+                          </SelectGroup>
+                        </SelectContent>
+                      </Select>
                     </FormControl>
                     <FormMessage />
                   </FormItem>

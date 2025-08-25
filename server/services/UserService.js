@@ -42,6 +42,7 @@ class UserService {
         fullName: user.fullName,
         dateOfBirth: user.dateOfBirth,
         phoneNumber: user.phoneNumber,
+        role:user.role
       });
       await newUser.save();
       return { success: true, data: newUser };
