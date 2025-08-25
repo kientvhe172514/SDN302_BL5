@@ -8,7 +8,7 @@ const JWT_SECRET = secret.token_secret || "your_jwt_secret";
 class UserController {
   login = async (req, res, next) => {
     try {
-      const userData = req.body.values;
+      const userData = req.body;
       const user = await userService.checkUser(userData);
       if (!user.success) {
         res.status(400).json({

@@ -43,7 +43,7 @@ export const Navigation = () => {
         >
           Subjects
         </Link>
-        <UserMenu user={user || undefined} />
+        <UserMenu user={user || null} />
       </div>
     </nav>
   );

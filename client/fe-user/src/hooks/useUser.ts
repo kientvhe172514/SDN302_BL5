@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
-import profileService, { UserProfile } from "@/lib/services/profile/profile.service";
+import profileService from "@/lib/services/profile/profile.service";
+import { UserProfile } from "@/models/user/user.model";
 
 export const useUser = () => {
   const [user, setUser] = useState<UserProfile | null>(null);
@@ -11,7 +12,7 @@ export const useUser = () => {
       setLoading(true);
       setError(null);
       const response = await profileService.getProfile();
-      if (response.status === "success") {
+      if (response.success) {
         setUser(response.data);
       } else {
         setError(response.message);

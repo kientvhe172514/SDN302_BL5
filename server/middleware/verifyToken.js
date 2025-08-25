@@ -3,7 +3,7 @@ const { promisify } = require("util");
 const { secret } = require("../config/secret");
 
 // Fallback JWT secret if not provided in environment
-const JWT_SECRET = secret.token_secret || "your_super_secret_jwt_token_key_here_2024";
+const JWT_SECRET = secret.token_secret || "your_jwt_secret";
 /**
  * 1. check if token exists
  * 2. if not token send res

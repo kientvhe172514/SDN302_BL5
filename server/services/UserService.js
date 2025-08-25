@@ -26,7 +26,10 @@ class UserService {
         data: userExist,
       };
     } catch (error) {
-      console.log(error.message);
+      return {
+        success: false,
+        message: "Internal server error",
+      };
     }
   }
 
@@ -47,7 +50,10 @@ class UserService {
       await newUser.save();
       return { success: true, data: newUser };
     } catch (error) {
-      console.log(error.message);
+      return {
+        success: false,
+        message: "Internal server error"
+      };
     }
   }
 
@@ -80,7 +86,10 @@ class UserService {
         },
       };
     } catch (error) {
-      console.log(error.message);
+      return {
+        success: false,
+        message: "Internal server error",
+      };
     }
   }
 

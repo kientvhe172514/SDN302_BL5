@@ -1,49 +1,97 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { User, Mail, Phone, Calendar, Save, Edit } from "lucide-react";
-import profileService, {
-  UserProfile,
-  UpdateProfileRequest,
-} from "@/lib/services/profile/profile.service";
+import { useAuth } from "@/context/auth-context";
+import profileService from "@/lib/services/profile/profile.service";
+import { getCurrentUser, setCurrentUser } from "@/utils/getCurrentUser";
+import { Calendar, Edit, Mail, Phone, Save, User } from "lucide-react";
+import { useEffect, useState } from "react";
+
+interface UserProfile {
+  _id: string;
+  email: string;
+  fullName: string;
+  dateOfBirth?: string;
+  phoneNumber?: string;
+  avatar?: string;
+  role: string;
+  createdAt: string;
+  updatedAt: string;
+}
 
 export default function ProfilePage() {
-  const [profile, setProfile] = useState<UserProfile | null>(null);
+  const { userInfo } = useAuth();
+  const [user, setUser] = useState<UserProfile | null>(null);
   const [loading, setLoading] = useState(true);
-  const [updating, setUpdating] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
-  const [formData, setFormData] = useState<UpdateProfileRequest>({});
+  const [formData, setFormData] = useState({
+    fullName: "",
+    phoneNumber: "",
+    dateOfBirth: "",
+  });
   const [message, setMessage] = useState<{
     type: "success" | "error";
     text: string;
   } | null>(null);
 
   useEffect(() => {
-    fetchProfile();
+    fetchUserData();
   }, []);
 
-  const fetchProfile = async () => {
+  const fetchUserData = async () => {
     try {
       setLoading(true);
-      const response = await profileService.getProfile();
-      if (response.status === "success") {
-        setProfile(response.data);
+
+      const currentUser = getCurrentUser();
+
+      if (currentUser) {
+        setUser(currentUser);
         setFormData({
-          fullName: response.data.fullName,
-          dateOfBirth: response.data.dateOfBirth
-            ? new Date(response.data.dateOfBirth).toISOString().split("T")[0]
-            : "",
-          phoneNumber: response.data.phoneNumber || "",
-          avatar: response.data.avatar || "",
+          fullName: currentUser.fullName || "",
+          phoneNumber: currentUser.phoneNumber || "",
+          dateOfBirth: currentUser.dateOfBirth || "",
         });
+      } else if (userInfo) {
+        const userFromContext: UserProfile = {
+          _id: userInfo.userId,
+          email: userInfo.email,
+          fullName: userInfo.fullname || "",
+          dateOfBirth: "",
+          phoneNumber: "",
+          avatar: userInfo.avatar || "",
+          role: userInfo.role,
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString(),
+        };
+        setUser(userFromContext);
+        setFormData({
+          fullName: userInfo.fullname || "",
+          phoneNumber: "",
+          dateOfBirth: "",
+        });
+        // Lưu vào localStorage để lần sau có data
+        setCurrentUser(userFromContext);
       }
+
+      try {
+        const response = await profileService.getProfile();
+        if (response.success && response.data) {
+          const apiUser = response.data;
+          setUser(apiUser);
+          setFormData({
+            fullName: apiUser.fullName || "",
+            phoneNumber: apiUser.phoneNumber || "",
+            dateOfBirth: apiUser.dateOfBirth || "",
+          });
+          setCurrentUser(apiUser);
+        }
+      } catch (apiError) {}
     } catch (error) {
-      console.error("Error fetching profile:", error);
+      console.error("Error fetching user data:", error);
       setMessage({ type: "error", text: "Failed to load profile" });
     } finally {
       setLoading(false);
@@ -52,34 +100,48 @@ export default function ProfilePage() {
 
   const handleUpdateProfile = async () => {
     try {
-      setUpdating(true);
-      const response = await profileService.updateProfile(formData);
-      if (response.status === "success") {
-        setProfile(response.data);
+      setLoading(true);
+
+      const updateData = {
+        fullName: formData.fullName,
+        phoneNumber: formData.phoneNumber,
+        dateOfBirth: formData.dateOfBirth,
+      };
+
+      const response = await profileService.updateProfile(updateData);
+
+      if (response.success) {
+        const updatedUser: UserProfile = {
+          ...user!,
+          fullName: formData.fullName,
+          phoneNumber: formData.phoneNumber,
+          dateOfBirth: formData.dateOfBirth,
+        };
+        setUser(updatedUser);
+        localStorage.setItem("currentUser", JSON.stringify(updatedUser));
+
         setIsEditing(false);
         setMessage({ type: "success", text: "Profile updated successfully!" });
         setTimeout(() => setMessage(null), 3000);
+      } else {
+        setMessage({
+          type: "error",
+          text: response.message || "Failed to update profile",
+        });
       }
     } catch (error) {
       console.error("Error updating profile:", error);
       setMessage({ type: "error", text: "Failed to update profile" });
     } finally {
-      setUpdating(false);
+      setLoading(false);
     }
   };
 
-  const handleInputChange = (
-    field: keyof UpdateProfileRequest,
-    value: string
-  ) => {
+  const handleInputChange = (field: string, value: string) => {
     setFormData((prev) => ({
       ...prev,
       [field]: value,
     }));
-  };
-
-  const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString("vi-VN");
   };
 
   if (loading) {
@@ -87,6 +149,16 @@ export default function ProfilePage() {
       <div className="container mx-auto p-6">
         <div className="flex items-center justify-center py-8">
           <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+        </div>
+      </div>
+    );
+  }
+
+  if (!user) {
+    return (
+      <div className="container mx-auto p-6">
+        <div className="text-center py-8">
+          <p className="text-red-600">No user data available</p>
         </div>
       </div>
     );
@@ -126,13 +198,9 @@ export default function ProfilePage() {
             <Button
               variant={isEditing ? "outline" : "default"}
               onClick={() => setIsEditing(!isEditing)}
-              disabled={updating}
+              disabled={loading}
             >
-              {isEditing ? (
-                <Edit className="h-4 w-4 mr-2" />
-              ) : (
-                <Edit className="h-4 w-4 mr-2" />
-              )}
+              <Edit className="h-4 w-4 mr-2" />
               {isEditing ? "Cancel" : "Edit Profile"}
             </Button>
           </div>
@@ -141,14 +209,17 @@ export default function ProfilePage() {
           {/* Avatar Section */}
           <div className="flex items-center space-x-4">
             <Avatar className="h-20 w-20">
-              <AvatarImage src={profile?.avatar || "/default-avatar.png"} />
               <AvatarFallback>
-                {profile?.fullName?.charAt(0).toUpperCase() || "U"}
+                {user?.fullName?.charAt(0).toUpperCase() ||
+                  user?.email?.charAt(0).toUpperCase() ||
+                  "U"}
               </AvatarFallback>
             </Avatar>
             <div>
-              <h3 className="text-lg font-semibold">{profile?.fullName}</h3>
-              <p className="text-gray-600">{profile?.role}</p>
+              <h3 className="text-lg font-semibold">
+                {user?.fullName || "User"}
+              </h3>
+              <p className="text-gray-600">{user?.role || "User"}</p>
             </div>
           </div>
 
@@ -162,7 +233,7 @@ export default function ProfilePage() {
               </Label>
               <Input
                 id="email"
-                value={profile?.email || ""}
+                value={user?.email || ""}
                 disabled
                 className="bg-gray-50"
               />
@@ -228,16 +299,12 @@ export default function ProfilePage() {
           {/* Additional Info */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="space-y-2">
-              <Label>Member Since</Label>
-              <p className="text-gray-600">
-                {profile?.createdAt ? formatDate(profile.createdAt) : "N/A"}
-              </p>
+              <Label>Role</Label>
+              <p className="text-gray-600">{user?.role || "N/A"}</p>
             </div>
             <div className="space-y-2">
-              <Label>Last Updated</Label>
-              <p className="text-gray-600">
-                {profile?.updatedAt ? formatDate(profile.updatedAt) : "N/A"}
-              </p>
+              <Label>Status</Label>
+              <p className="text-gray-600">Active</p>
             </div>
           </div>
 
@@ -246,11 +313,11 @@ export default function ProfilePage() {
             <div className="flex justify-end pt-4 border-t">
               <Button
                 onClick={handleUpdateProfile}
-                disabled={updating}
                 className="flex items-center space-x-2"
+                disabled={loading}
               >
                 <Save className="h-4 w-4" />
-                {updating ? "Saving..." : "Save Changes"}
+                {loading ? "Saving..." : "Save Changes"}
               </Button>
             </div>
           )}
