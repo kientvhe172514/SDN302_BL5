@@ -31,6 +31,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       } else {
         setIsLoggedIn(false);
         setUserInfo(null);
+        router.replace("/authentication/login");
       }
       return;
     }
@@ -38,7 +39,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     if (!token || !isTokenValid(token)) {
       setIsLoggedIn(false);
       localStorage.removeItem(Constants.API_TOKEN_KEY);
-      localStorage.removeItem(Constants.API_REFRESH_TOKEN_KEY);
       router.replace("/authentication/login");
       return;
     }
@@ -46,7 +46,10 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     setIsLoggedIn(true);
     const decoded = jwtDecode<TokenPayload>(token);
     setUserInfo(decoded);
-    if ((decoded.role === "teacher" || decoded.role === "student")  && !currentPath.startsWith("/")) {
+    if (
+      (decoded.role === "teacher" || decoded.role === "student") &&
+      !currentPath.startsWith("/")
+    ) {
       router.replace("/");
     }
   }, []);
@@ -60,8 +63,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   return (
     <AuthContext.Provider
-      value={{ isLoggedIn, userInfo, loginSuccess, setUserInfo }}
-    >
+      value={{ isLoggedIn, userInfo, loginSuccess, setUserInfo }}>
       {children}
     </AuthContext.Provider>
   );

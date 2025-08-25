@@ -31,6 +31,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       } else {
         setIsLoggedIn(false);
         setUserInfo(null);
+        router.replace('/authentication/login')
       }
       return;
     }
