@@ -7,10 +7,14 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { Subject, SubjectFormData, SubjectValidationErrors } from "@/models/subject";
+import {
+  Subject,
+  SubjectFormData,
+  SubjectValidationErrors,
+} from "@/models/subject";
+import { Input } from "../ui/input";
 
 interface SubjectFormProps {
   isOpen: boolean;
@@ -19,7 +23,10 @@ interface SubjectFormProps {
   formData: SubjectFormData;
   errors: SubjectValidationErrors;
   isSubmitting: boolean;
-  onFormDataChange: (field: keyof SubjectFormData, value: string | number) => void;
+  onFormDataChange: (
+    field: keyof SubjectFormData,
+    value: string | number
+  ) => void;
   onSubmit: (e: React.FormEvent) => void;
 }
 
@@ -54,7 +61,7 @@ export default function SubjectForm({
               <p className="text-sm text-red-500 mt-1">{errors.subjectCode}</p>
             )}
           </div>
-          
+
           <div>
             <Label htmlFor="name">Tên môn học</Label>
             <Input
@@ -67,7 +74,7 @@ export default function SubjectForm({
               <p className="text-sm text-red-500 mt-1">{errors.name}</p>
             )}
           </div>
-          
+
           <div>
             <Label htmlFor="description">Mô tả</Label>
             <Textarea
@@ -81,32 +88,32 @@ export default function SubjectForm({
               <p className="text-sm text-red-500 mt-1">{errors.description}</p>
             )}
           </div>
-          
+
           <div>
             <Label htmlFor="credits">Số tín chỉ</Label>
             <Input
               id="credits"
-              type="number"
-              min="1"
               value={formData.credits}
-              onChange={(e) => onFormDataChange("credits", parseInt(e.target.value) || 0)}
+              onChange={(e) => {
+                const value = e.target.value;
+                onFormDataChange(
+                  "credits",
+                  value === "" ? "" : parseInt(value)
+                );
+              }}
               placeholder="VD: 3"
             />
             {errors.credits && (
               <p className="text-sm text-red-500 mt-1">{errors.credits}</p>
             )}
           </div>
-          
+
           <div className="flex justify-end gap-2">
             <Button type="button" variant="outline" onClick={onClose}>
               Hủy
             </Button>
             <Button type="submit" disabled={isSubmitting}>
-              {isSubmitting
-                ? "Đang xử lý..."
-                : subject
-                ? "Cập nhật"
-                : "Tạo"}
+              {isSubmitting ? "Đang xử lý..." : subject ? "Cập nhật" : "Tạo"}
             </Button>
           </div>
         </form>

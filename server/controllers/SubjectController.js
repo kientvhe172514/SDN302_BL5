@@ -1,5 +1,5 @@
 const SubjectService = require("../services/SubjectService");
-
+const Subject = require("../model/Subject");
 class SubjectController {
     constructor() {
         this.subjectService = new SubjectService();
@@ -125,8 +125,6 @@ class SubjectController {
     // Get subjects statistics
     getSubjectsStats = async (req, res, next) => {
         try {
-            const Subject = require("../model/Subject");
-
             const totalSubjects = await Subject.countDocuments();
             const subjectsByCredits = await Subject.aggregate([
                 {
