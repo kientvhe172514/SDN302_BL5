@@ -299,6 +299,7 @@ export default function ProfilePage() {
           {/* Additional Info */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="space-y-2">
+              {/* max={new Date().toISOString().split("T")[0]} */}
               <Label>Role</Label>
               <p className="text-gray-600">{user?.role || "N/A"}</p>
             </div>
