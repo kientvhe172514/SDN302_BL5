@@ -40,4 +40,21 @@ export class Endpoints {
     GET_MY_SCHEDULE: 'timeschedule/my-schedule',
     ASSIGN_SUBJECTS: 'registrations/assign',
   }
+
+  static readonly Application = {
+    
+    // Admin/Teacher endpoints
+    GET_ALL: "applications",
+    GET_BY_STUDENT: (studentId: string) => `applications/student/${studentId}`,
+    PROCESS: (id: string) => `applications/${id}/process`,
+    
+    // Statistics endpoints
+    GET_STATS_OVERVIEW: "applications/stats/overview",
+    GET_STATS_BY_TYPE: "applications/stats/by-type",
+    
+    // Application types endpoints
+    GET_TYPES_ALL: "applications/types/all",
+    GET_TYPES_BY_CATEGORY: (category: string) => `applications/types/category/${category}`,
+    GET_CATEGORIES: "applications/types/categories",
+  };
 }

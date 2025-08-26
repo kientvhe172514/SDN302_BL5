@@ -14,7 +14,7 @@ class ApplicationService {
     }
 
     // Lấy tất cả đơn
-    async getAllApplications(filters = {}) {
+    async getAllApplications(filters = {}, pagination = {}) {
         try {
             let query = Application.find();
             
@@ -31,9 +31,94 @@ class ApplicationService {
             if (filters.processedBy) {
                 query = query.where('processedBy', filters.processedBy);
             }
+            
+            // Search filter - cần populate trước khi search
+            if (filters.search) {
+                // Trim whitespace and escape special regex characters
+                const trimmedSearch = filters.search.trim();
+                if (trimmedSearch) {
+                    const escapedSearch = trimmedSearch.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+                    
+                    // Tìm applications có student match với search term
+                    const matchingStudents = await User.find({
+                        $or: [
+                            { fullName: { $regex: escapedSearch, $options: 'i' } },
+                            { email: { $regex: escapedSearch, $options: 'i' } },
+                            { studentId: { $regex: escapedSearch, $options: 'i' } }
+                        ]
+                    }).select('_id');
+                    
+                    const studentIds = matchingStudents.map(student => student._id);
+                    
+                    if (studentIds.length > 0) {
+                        query = query.where('student').in(studentIds);
+                    } else {
+                        // Nếu không tìm thấy student nào, return empty result
+                        query = query.where('_id').in([]);
+                    }
+                }
+            }
+
+            // Count total for pagination - cần count với cùng điều kiện search
+            let countQuery = Application.find();
+            
+            // Apply same filters for counting
+            if (filters.status) {
+                countQuery = countQuery.where('status', filters.status);
+            }
+            if (filters.applicationType) {
+                countQuery = countQuery.where('applicationType', filters.applicationType);
+            }
+            if (filters.student) {
+                countQuery = countQuery.where('student', filters.student);
+            }
+            if (filters.processedBy) {
+                countQuery = countQuery.where('processedBy', filters.processedBy);
+            }
+            
+            // Apply search filter for counting
+            if (filters.search) {
+                const trimmedSearch = filters.search.trim();
+                if (trimmedSearch) {
+                    const escapedSearch = trimmedSearch.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+                    const matchingStudents = await User.find({
+                        $or: [
+                            { fullName: { $regex: escapedSearch, $options: 'i' } },
+                            { email: { $regex: escapedSearch, $options: 'i' } },
+                            { studentId: { $regex: escapedSearch, $options: 'i' } }
+                        ]
+                    }).select('_id');
+                    
+                    const studentIds = matchingStudents.map(student => student._id);
+                    
+                    if (studentIds.length > 0) {
+                        countQuery = countQuery.where('student').in(studentIds);
+                    } else {
+                        countQuery = countQuery.where('_id').in([]);
+                    }
+                }
+            }
+            
+            const total = await countQuery.countDocuments();
+
+            // Apply pagination
+            if (pagination.skip !== undefined) {
+                query = query.skip(pagination.skip);
+            }
+            if (pagination.limit) {
+                query = query.limit(pagination.limit);
+            }
+
+            // Sort by creation date (newest first)
+            query = query.sort({ createdAt: -1 });
 
             const applications = await query.exec();
-            return await this.populateApplications(applications);
+            const populatedApplications = await this.populateApplications(applications);
+
+            return {
+                applications: populatedApplications,
+                total: total
+            };
         } catch (error) {
             throw error;
         }
@@ -150,16 +235,16 @@ class ApplicationService {
     // Populate application với thông tin user
     async populateApplication(application) {
         return await application.populate([
-            { path: 'student', select: 'name email studentId' },
-            { path: 'processedBy', select: 'name email role' }
+            { path: 'student', select: 'fullName email studentId' },
+            { path: 'processedBy', select: 'fullName email role' }
         ]);
     }
 
     // Populate nhiều applications
     async populateApplications(applications) {
         return await Application.populate(applications, [
-            { path: 'student', select: 'name email studentId' },
-            { path: 'processedBy', select: 'name email role' }
+            { path: 'student', select: 'fullName email studentId' },
+            { path: 'processedBy', select: 'fullName email role' }
         ]);
     }
 }

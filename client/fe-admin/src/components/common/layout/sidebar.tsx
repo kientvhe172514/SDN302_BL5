@@ -52,7 +52,7 @@ const items = [
   },
   {
     title: "Đơn yêu cầu",
-    url: "#",
+    url: "/manage-application",
     icon: AppWindow,
   },
   {

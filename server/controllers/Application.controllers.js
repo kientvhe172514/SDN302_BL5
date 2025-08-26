@@ -16,7 +16,7 @@ class ApplicationController {
         try {
             const applicationData = {
                 ...req.body,
-                student: req.user.id // Lấy từ token authentication
+                student: req.user.userId // Lấy từ token authentication (userId từ decoded token)
             };
 
             const application = await ApplicationService.createApplication(applicationData);
@@ -38,20 +38,35 @@ class ApplicationController {
                 status: req.query.status,
                 applicationType: req.query.applicationType,
                 student: req.query.student,
-                processedBy: req.query.processedBy
+                processedBy: req.query.processedBy,
+                search: req.query.search
             };
+
+            // Pagination
+            const page = parseInt(req.query.page) || 1;
+            const limit = parseInt(req.query.limit) || 10;
+            const skip = (page - 1) * limit;
 
             // Loại bỏ các filter undefined
             Object.keys(filters).forEach(key => 
                 filters[key] === undefined && delete filters[key]
             );
 
-            const applications = await ApplicationService.getAllApplications(filters);
+            const result = await ApplicationService.getAllApplications(filters, { page, limit, skip });
             
             res.status(200).json({
                 success: true,
                 message: 'Applications retrieved successfully',
-                data: applications
+                data: {
+                    applications: result.applications,
+                    total: result.total,
+                    pagination: {
+                        page,
+                        limit,
+                        total: result.total,
+                        totalPages: Math.ceil(result.total / limit)
+                    }
+                }
             });
         } catch (error) {
             next(new ApiError(500, error.message));
@@ -77,7 +92,7 @@ class ApplicationController {
     // Lấy đơn của sinh viên hiện tại
     async getMyApplications(req, res, next) {
         try {
-            const studentId = req.user.id;
+            const studentId = req.user.userId;
             const applications = await ApplicationService.getApplicationsByStudent(studentId);
             
             res.status(200).json({
