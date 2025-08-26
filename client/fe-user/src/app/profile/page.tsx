@@ -121,7 +121,10 @@ export default function ProfilePage() {
         localStorage.setItem("currentUser", JSON.stringify(updatedUser));
 
         setIsEditing(false);
-        setMessage({ type: "success", text: "Profile updated successfully!" });
+        setMessage({
+          type: "success",
+          text: response.message,
+        });
         setTimeout(() => setMessage(null), 3000);
       } else {
         setMessage({
@@ -129,9 +132,12 @@ export default function ProfilePage() {
           text: response.message || "Failed to update profile",
         });
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error updating profile:", error);
-      setMessage({ type: "error", text: "Failed to update profile" });
+      setMessage({
+        type: "error",
+        text: error.response?.data?.message || "Failed to update profile",
+      });
     } finally {
       setLoading(false);
     }

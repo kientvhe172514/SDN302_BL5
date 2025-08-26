@@ -107,6 +107,7 @@ class UserService {
         }
       });
 
+
       const updatedUser = await User.findByIdAndUpdate(
         userId,
         filteredUpdates,
@@ -120,7 +121,6 @@ class UserService {
         };
       }
 
-      // Convert user to plain object and format dateOfBirth
       const userData = updatedUser.toObject();
       if (userData.dateOfBirth) {
         userData.dateOfBirth = userData.dateOfBirth.toISOString().split('T')[0];
@@ -128,7 +128,7 @@ class UserService {
 
       return {
         success: true,
-        message: "Cập nhật thành công",
+        message: "Cập nhật thông tin cá nhân thành công!",
         data: userData,
       };
     } catch (error) {
@@ -138,6 +138,16 @@ class UserService {
       };
     }
   }
+
+  // if (
+  //         allowedUpdates.hasOwnProperty('dateOfBirth') &&
+  //         (!allowedUpdates.dateOfBirth || allowedUpdates.dateOfBirth.trim() === "")
+  //       ) {
+  //         return {
+  //           success: false,
+  //           message: "Ngày sinh không được để trống",
+  //         };
+  //       }
 
   async getUserById(userId) {
     try {
