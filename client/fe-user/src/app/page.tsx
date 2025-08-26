@@ -44,6 +44,12 @@ export default function Home() {
                 Đăng ký học môn học tại nước ngoài
               </Link>
             </li>
+            <li><span><Link href="/sendApplication" className="hover:underline text-blue-600">Gửi đơn</Link></span> | 
+          <span> <Link href="/viewApplication" className="hover:underline text-blue-600">Xem đơn</Link></span>
+          </li>
+          <li><Link href="/viewWishlist" className="hover:underline text-blue-600">Wishlist Course (Danh các môn học chờ lớp )</Link></li>
+          <li><Link href="/registerWishlist" className="hover:underline text-blue-600">RegisterWishlist (Đăng ký)</Link></li>
+
           </ul>
         </div>
         {/* Cột 2: Information Access */}
@@ -67,7 +73,7 @@ export default function Home() {
             </li>
             <li>
               <Link
-                href="/info/weekly-timetable"
+                href="/weekly-timetable"
                 className="hover:underline text-blue-600"
               >
                 Weekly timetable (Thời khóa biểu từng tuần)

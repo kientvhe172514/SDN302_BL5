@@ -47,7 +47,7 @@ const items = [
   },
   {
     title: "Lịch học",
-    url: "#",
+    url: "/timeschedule",
     icon: Calendar,
   },
   {

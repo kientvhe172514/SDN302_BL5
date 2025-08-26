@@ -17,10 +17,6 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
       {/* Chỉ hiển thị Header nếu KHÔNG phải trang login */}
       {!isLoginPage && <Header />}
 
-      {/*
-        Thêm class mt-10 (margin-top) một cách có điều kiện
-        để đẩy nội dung xuống dưới Header (nếu Header tồn tại)
-      */}
       <main className={`flex-grow px-8 py-8 ${!isLoginPage ? 'mt-10' : ''}`}>
         <Providers>
           {children}

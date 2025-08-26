@@ -6,7 +6,7 @@ export class Endpoints {
     FORGOT_PASSWORD: "auth/forgot-password",
     CHANGE_PASSWORD: "auth/change-password",
     VERIFY_FORGOT_PASSWORD: "auth/verify-otp-reset-password",
-
+    
     REGISTER: "auth/register",
     VERIFY_REGISTRATION_OTP: "auth/verify-registration-otp",
     RESEND_REGISTRATION_OTP: "auth/resend-registration-otp",
@@ -34,5 +34,10 @@ export class Endpoints {
     GET_BY_ID: (id:string) => `class/get-class/${id}`,
     UPDATE_CLASS: (id:string) => `class/update-class/${id}`,
     DELETE_CLASS: (id:string) => `class/delete/${id}`
+  }
+
+  static readonly Timeshchedule = {
+    GET_MY_SCHEDULE: 'timeschedule/my-schedule',
+    ASSIGN_SUBJECTS: 'registrations/assign',
   }
 }

@@ -16,6 +16,10 @@ const classSchema = new Schema(
       type: String,
       required: true,
     },
+    students: [{
+        type: Schema.Types.ObjectId,
+        ref: 'User'
+    }],
     maxSize: {
       type: Number,
       default: 30,

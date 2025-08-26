@@ -303,12 +303,7 @@ export default function ProfilePage() {
               <Label>Role</Label>
               <p className="text-gray-600">{user?.role || "N/A"}</p>
             </div>
-            <div className="space-y-2">
-              <Label>Status</Label>
-              <p className="text-gray-600">Active</p>
-            </div>
           </div>
-
           {/* Save Button */}
           {isEditing && (
             <div className="flex justify-end pt-4 border-t">
