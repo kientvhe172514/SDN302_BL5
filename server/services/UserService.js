@@ -106,6 +106,16 @@ class UserService {
         }
       });
 
+      if (
+        allowedUpdates.hasOwnProperty('dateOfBirth') &&
+        (!allowedUpdates.dateOfBirth || allowedUpdates.dateOfBirth.trim() === "")
+      ) {
+        return {
+          success: false,
+          message: "Ngày sinh không được để trống",
+        };
+      }
+
       const updatedUser = await User.findByIdAndUpdate(
         userId,
         filteredUpdates,
@@ -137,6 +147,16 @@ class UserService {
       };
     }
   }
+
+  // if (
+  //         allowedUpdates.hasOwnProperty('dateOfBirth') &&
+  //         (!allowedUpdates.dateOfBirth || allowedUpdates.dateOfBirth.trim() === "")
+  //       ) {
+  //         return {
+  //           success: false,
+  //           message: "Ngày sinh không được để trống",
+  //         };
+  //       }
 
   async getUserById(userId) {
     try {
