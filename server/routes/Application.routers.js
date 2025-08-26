@@ -3,15 +3,15 @@ const router = express.Router();
 const ApplicationController = require('../controllers/Application.controllers');
 const { checkAuth } = require('../middleware/authorization');
 
+// Routes cho Admin/Teacher (cần quyền admin hoặc teacher) - Đặt trước để tránh conflict
+router.get('/', checkAuth, ApplicationController.getAllApplications); // Lấy tất cả đơn
+
 // Routes cho sinh viên (cần xác thực)
 router.post('/', checkAuth, ApplicationController.createApplication); // Tạo đơn mới
 router.get('/my-applications', checkAuth, ApplicationController.getMyApplications); // Lấy đơn của mình
 router.get('/:id', checkAuth, ApplicationController.getApplicationById); // Xem chi tiết đơn
 router.put('/:id', checkAuth, ApplicationController.updateApplication); // Cập nhật đơn của mình
 router.delete('/:id', checkAuth, ApplicationController.deleteApplication); // Xóa đơn của mình
-
-// Routes cho Admin/Teacher (cần quyền admin hoặc teacher)
-router.get('/', checkAuth, ApplicationController.getAllApplications); // Lấy tất cả đơn
 router.get('/student/:studentId', checkAuth, ApplicationController.getApplicationsByStudent); // Lấy đơn theo student
 router.put('/:id/process', checkAuth, ApplicationController.processApplication); // Xử lý đơn (approve/reject)
 

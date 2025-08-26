@@ -7,7 +7,7 @@ export interface Application {
   _id: string;
   student: {
     _id: string;
-    name: string;
+    fullName: string;
     email: string;
     studentId: string;
   };
@@ -16,7 +16,7 @@ export interface Application {
   status: 'pending' | 'approved' | 'rejected';
   processedBy?: {
     _id: string;
-    name: string;
+    fullName: string;
     email: string;
     role: string;
   };

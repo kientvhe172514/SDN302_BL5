@@ -8,15 +8,9 @@ class WishlistController {
     upsertWishlist = async (req, res, next) => {
         try {
             const { student, subjects, semester } = req.body;
-            console.log('Controller - Upsert wishlist request:', { student, subjects, semester });
-            console.log('Controller - Authenticated user:', req.user);
-            
             const wishlist = await this.wishlistService.upsertWishlist({ student, subjects, semester });
-            console.log('Controller - Wishlist upserted:', wishlist);
-            
             res.status(200).json({ success: true, message: "Wishlist saved", data: wishlist });
         } catch (error) {
-            console.error('Controller - Upsert error:', error);
             next(error);
         }
     };
@@ -64,15 +58,9 @@ class WishlistController {
         try {
             const { studentId } = req.params;
             const { subjectIds } = req.body;
-            console.log('Controller - Add subjects request:', { studentId, subjectIds });
-            console.log('Controller - Authenticated user:', req.user);
-            
             const wishlist = await this.wishlistService.addSubjects(studentId, subjectIds);
-            console.log('Controller - Subjects added to wishlist:', wishlist);
-            
             res.status(200).json({ success: true, message: "Subjects added", data: wishlist });
         } catch (error) {
-            console.error('Controller - Add subjects error:', error);
             next(error);
         }
     };
