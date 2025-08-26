@@ -57,4 +57,9 @@ export class Endpoints {
     GET_TYPES_BY_CATEGORY: (category: string) => `applications/types/category/${category}`,
     GET_CATEGORIES: "applications/types/categories",
   };
+  
+
+  static readonly Dashboard = {
+    GET_STATISTICAL : 'dashboard'
+  }
 }
