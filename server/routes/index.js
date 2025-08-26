@@ -1,3 +1,4 @@
+
 const express = require("express");
 const router = express.Router();
 const userRouter = require("../routes/user.routes");
@@ -11,5 +12,7 @@ router.use("/user", userRouter);
 router.use("/subjects", subjectRouter);
 router.use("/applications", applicationRouter);
 router.use("/wishlists", wishlistRouter);
+router.use('/schedules', timeScheduleRoutes);
+
 
 module.exports = router;

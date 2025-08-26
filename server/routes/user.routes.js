@@ -10,7 +10,6 @@ router.post("/add-user", checkAuth, userController.addUser);
 router.post("/login", userController.login);
 // get all user
 router.get('/get-all', checkAuth, userController.getAllUser);
-
 // Profile routes
 router.get('/profile', verifyToken, userController.getUserProfile);
 router.put('/profile', verifyToken, userController.updateProfile);

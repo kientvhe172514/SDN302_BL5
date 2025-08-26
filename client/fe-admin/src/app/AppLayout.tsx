@@ -17,7 +17,6 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
       </main>
     );
   }
-  // Nếu là các trang khác, hiển thị layout đầy đủ với Sidebar
   return (
     <SidebarProvider> {/* Bao bọc toàn bộ layout */}
       <div className="flex h-screen w-full">
