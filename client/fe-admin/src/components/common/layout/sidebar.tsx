@@ -23,6 +23,7 @@ import {
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
+import { logout } from "@/utils/logout";
 // Menu items.
 const items = [
   {
@@ -90,8 +91,7 @@ export function AppSidebar() {
                           isActive
                             ? "bg-orange-100 text-orange-600 font-medium"
                             : "text-gray-600 hover:bg-gray-100"
-                        }`}
-                      >
+                        }`}>
                         <item.icon className="h-5 w-5" />
                         <span>{item.title}</span>
                       </a>
@@ -109,7 +109,7 @@ export function AppSidebar() {
             aria-label="Logout"
             variant="outline"
             className="w-full flex items-center justify-center gap-2"
-          >
+            onClick={() => logout()}>
             <LogOut className="h-4 w-4" />
             Logout
           </Button>
