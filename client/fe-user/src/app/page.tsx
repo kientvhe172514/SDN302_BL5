@@ -73,7 +73,7 @@ export default function Home() {
             </li>
             <li>
               <Link
-                href="/info/weekly-timetable"
+                href="/weekly-timetable"
                 className="hover:underline text-blue-600"
               >
                 Weekly timetable (Thời khóa biểu từng tuần)

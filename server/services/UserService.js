@@ -3,6 +3,7 @@ const User = require("../model/User");
 const bcrypt = require("bcryptjs");
 class UserService {
   async checkUser(user) {
+    console.log(user.email);
     try {
       const userExist = await User.findOne({
         email: user.email,
