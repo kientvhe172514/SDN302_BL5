@@ -41,6 +41,23 @@ class TimeScheduleController {
             next(error);
         }
     }
+
+    static async handleCreateSchedule(req, res, next) {
+        try {
+            // Lấy tất cả dữ liệu cần thiết từ body
+            const scheduleData = req.body;
+
+            // Validate input cơ bản
+            if (!scheduleData.classId || !scheduleData.teacherId || !scheduleData.slotNumber) {
+                return res.status(400).json({ message: 'classId, teacherId, and slotNumber are required.' });
+            }
+
+            const result = await TimeScheduleService.createSchedule(scheduleData);
+            res.status(201).json(result);
+        } catch (error) {
+            next(error); // Chuyển lỗi đến global error handler
+        }
+    }
 }
 
 module.exports = TimeScheduleController;

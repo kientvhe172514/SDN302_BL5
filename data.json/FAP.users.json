@@ -1,0 +1,126 @@
+[{
+  "_id": {
+    "$oid": "68aad432df955a5da8f6ed4d"
+  },
+  "email": "kienvt@gmail.com",
+  "password": "$2a$10$rwv7vv0nKumqx59QZrYx8.Hknlp40UTQbbJUG7UC84ZQIymYXsZPG",
+  "fullName": "Tran Duong",
+  "dateOfBirth": {
+    "$date": "2025-08-23T00:00:00.000Z"
+  },
+  "phoneNumber": "0335500390",
+  "avatar": "default-avatar.png",
+  "role": "student",
+  "createdAt": {
+    "$date": "2025-08-24T08:58:26.660Z"
+  },
+  "updatedAt": {
+    "$date": "2025-08-24T08:58:26.660Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "68ac8105755d83990c9c7f11"
+  },
+  "email": "trandaiduong14112000@gmail.com",
+  "password": "$2a$10$f67k//49N1fYPLyxtqruNeru7xhX6F9kWTCjajpIrrGkwrfKX6QBm",
+  "fullName": "Tran Dai Duong",
+  "dateOfBirth": {
+    "$date": "2003-11-14T00:00:00.000Z"
+  },
+  "phoneNumber": "0335500390",
+  "avatar": "default-avatar.png",
+  "role": "admin",
+  "createdAt": {
+    "$date": "2025-08-25T15:28:05.178Z"
+  },
+  "updatedAt": {
+    "$date": "2025-08-25T15:28:05.178Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "68ac87dff69371f2cccd0d74"
+  },
+  "email": "thangnmhe176363@fpt.edu.vn",
+  "password": "$2a$10$aNBr6KtlEs9Z5BgKm/cae.GB7zSfk8KMQObs37TgDDTGFPp3za2IK",
+  "fullName": "Nguyen Manh Thang",
+  "dateOfBirth": {
+    "$date": "2003-06-18T00:00:00.000Z"
+  },
+  "phoneNumber": "0865080903",
+  "avatar": "http://localhost:9999/uploads/avatars/avatar-1756282236830-64557454.png",
+  "role": "student",
+  "createdAt": {
+    "$date": "2025-08-25T15:57:19.523Z"
+  },
+  "updatedAt": {
+    "$date": "2025-08-27T08:11:42.120Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "68ac92740adfa7aed570759f"
+  },
+  "email": "sonnt@gmail.com",
+  "password": "$2a$10$M.HCznwwWQ2OQbbMbN.XO.OMJsutYhPpmqJdvXFcpMweZfkPXIW/S",
+  "fullName": "Nguyen Thai Sonnnnn",
+  "dateOfBirth": {
+    "$date": "2025-07-17T00:00:00.000Z"
+  },
+  "phoneNumber": "0865080903",
+  "avatar": "default-avatar.png",
+  "role": "student",
+  "createdAt": {
+    "$date": "2025-08-25T16:42:28.770Z"
+  },
+  "updatedAt": {
+    "$date": "2025-08-26T07:57:05.038Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "68ad142d66552478fd8fa750"
+  },
+  "email": "tranvukien125@gmail.com",
+  "password": "$2a$10$oOD4pqLXxFjw0xiSrI2jquZoX6DwNmDPhvb/E6Ov4tpsQ4/W1y4wq",
+  "fullName": "Tran Vu Kien",
+  "dateOfBirth": {
+    "$date": "2025-08-27T00:00:00.000Z"
+  },
+  "phoneNumber": "0398347221",
+  "avatar": "default-avatar.png",
+  "role": "student",
+  "createdAt": {
+    "$date": "2025-08-26T01:55:57.540Z"
+  },
+  "updatedAt": {
+    "$date": "2025-08-26T07:43:11.702Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "68adc26a32f41cb873b9bd4d"
+  },
+  "email": "manhthang0809@gmail.com",
+  "password": "$2a$10$5LOEkLf4fzpi0OHx2ma.x.kbepIvMTrAtE825tpJIABo9z7xz9znS",
+  "fullName": "Vuong Van Truong",
+  "dateOfBirth": {
+    "$date": "2003-09-07T17:00:00.000Z"
+  },
+  "phoneNumber": "0865080903",
+  "avatar": "default-avatar.png",
+  "role": "teacher",
+  "createdAt": {
+    "$date": "2025-08-26T14:19:22.325Z"
+  },
+  "updatedAt": {
+    "$date": "2025-08-26T14:19:22.325Z"
+  },
+  "__v": 0
+}]

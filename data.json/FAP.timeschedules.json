@@ -1,0 +1,46 @@
+[{
+  "_id": {
+    "$oid": "68aebd4f2843cc3c7a850943"
+  },
+  "class": {
+    "$oid": "68ab5d69a652b8a97278a5ca"
+  },
+  "teacher": {
+    "$oid": "68adc26a32f41cb873b9bd4d"
+  },
+  "slotNumber": 1,
+  "dayOfWeek": "Monday",
+  "startTime": "07:30",
+  "endTime": "08:35",
+  "room": "BE-210",
+  "createdAt": {
+    "$date": "2025-08-27T08:09:51.518Z"
+  },
+  "updatedAt": {
+    "$date": "2025-08-27T08:09:51.518Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "68aebd582843cc3c7a850949"
+  },
+  "class": {
+    "$oid": "68ab5d69a652b8a97278a5ca"
+  },
+  "teacher": {
+    "$oid": "68adc26a32f41cb873b9bd4d"
+  },
+  "slotNumber": 1,
+  "dayOfWeek": "Tuesday",
+  "startTime": "07:30",
+  "endTime": "08:35",
+  "room": "BE-210",
+  "createdAt": {
+    "$date": "2025-08-27T08:10:00.849Z"
+  },
+  "updatedAt": {
+    "$date": "2025-08-27T08:10:00.849Z"
+  },
+  "__v": 0
+}]

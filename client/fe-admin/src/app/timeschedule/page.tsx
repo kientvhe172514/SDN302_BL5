@@ -1,7 +1,8 @@
-import { AssignSubjectsArea } from "@/components/timeschedule/AssignSubjectsArea";
+import { TimeScheduleManagementArea } from "@/components/timeschedule/TimeScheduleManagementArea";
 
-export default function AssignSubjectsPage() {
+
+export default function TimeSchedulePage() {
     return (
-        <AssignSubjectsArea />
+        <TimeScheduleManagementArea />
     );
 }

@@ -1,0 +1,78 @@
+[{
+  "_id": {
+    "$oid": "66d9b8a4f4c5e1a3c1a11111"
+  },
+  "student": {
+    "$oid": "68ac87dff69371f2cccd0d74"
+  },
+  "subjects": [
+    {
+      "$oid": "68ab2d269acf32f94a6fb643"
+    },
+    {
+      "$oid": "68ab2d269acf32f94a6fb648"
+    },
+    {
+      "$oid": "68ab2d269acf32f94a6fb647"
+    },
+    {
+      "$oid": "68ab2d269acf32f94a6fb644"
+    },
+    {
+      "$oid": "68ab2d269acf32f94a6fb64d"
+    }
+  ],
+  "semester": "Fall 2025",
+  "createdAt": {
+    "$date": "2025-08-25T15:00:00.000Z"
+  },
+  "updatedAt": {
+    "$date": "2025-08-26T15:20:57.080Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "66d9b8a4f4c5e1a3c1a22222"
+  },
+  "student": {
+    "$oid": "68ac92740adfa7aed570759f"
+  },
+  "subjects": [
+    {
+      "$oid": "68ab2d269acf32f94a6fb64d"
+    }
+  ],
+  "semester": "Spring 2026",
+  "createdAt": {
+    "$date": "2025-08-25T15:05:00.000Z"
+  },
+  "updatedAt": {
+    "$date": "2025-08-25T15:05:00.000Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "66d9b8a4f4c5e1a3c1a33333"
+  },
+  "student": {
+    "$oid": "68ad142d66552478fd8fa750"
+  },
+  "subjects": [
+    {
+      "$oid": "68ab2d269acf32f94a6fb646"
+    },
+    {
+      "$oid": "68ab2d269acf32f94a6fb64a"
+    },
+    {
+      "$oid": "68ab2d269acf32f94a6fb64c"
+    }
+  ],
+  "semester": "Sping 2026",
+  "createdAt": {
+    "$date": "2025-08-25T15:10:00.000Z"
+  },
+  "updatedAt": {
+    "$date": "2025-08-25T15:10:00.000Z"
+  }
+}]

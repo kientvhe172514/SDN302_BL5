@@ -39,5 +39,6 @@ export class Endpoints {
   static readonly Timeshchedule = {
     GET_MY_SCHEDULE: 'timeschedule/my-schedule',
     ASSIGN_SUBJECTS: 'registrations/assign',
+    CREATE_TIMESCHEDULE: 'schedules/create'
   }
 }

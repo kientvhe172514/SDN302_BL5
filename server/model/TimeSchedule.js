@@ -25,11 +25,11 @@ const timeScheduleSchema = new Schema({
     },
     // SỬA LẠI: Đưa startTime và endTime ra ngoài thành các trường riêng
     startTime: { // Ví dụ: "07:30"
-        type: Date,
+        type: String,
         required: true
     },
     endTime: { // Ví dụ: "09:30"
-        type: Date,
+        type: String,
         required: true
     },
     room: { // Thêm phòng học
@@ -37,6 +37,5 @@ const timeScheduleSchema = new Schema({
     }
 }, { timestamps: true });
 
-timeScheduleSchema.index({ class: 1, slotNumber: 1 }, { unique: true });
-
+timeScheduleSchema.index({ class: 1, dayOfWeek: 1, slotNumber: 1 }, { unique: true });
 module.exports = mongoose.model('TimeSchedule', timeScheduleSchema);

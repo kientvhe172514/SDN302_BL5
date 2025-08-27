@@ -1,0 +1,159 @@
+[{
+  "_id": {
+    "$oid": "68ab5d69a652b8a97278a5ca"
+  },
+  "classCode": "SE1833-NJ",
+  "semester": "Fall 2024",
+  "maxSize": 70,
+  "createdAt": {
+    "$date": "2025-08-24T18:43:53.272Z"
+  },
+  "updatedAt": {
+    "$date": "2025-08-27T07:46:09.511Z"
+  },
+  "__v": 0,
+  "subject": {
+    "$oid": "68ab2d269acf32f94a6fb646"
+  },
+  "students": [
+    {
+      "$oid": "68ad142d66552478fd8fa750"
+    }
+  ]
+},
+{
+  "_id": {
+    "$oid": "68ab5d9fa652b8a97278a5d0"
+  },
+  "classCode": "SE1735-NET",
+  "semester": "Fall 2025",
+  "maxSize": 30,
+  "createdAt": {
+    "$date": "2025-08-24T18:44:47.456Z"
+  },
+  "updatedAt": {
+    "$date": "2025-08-24T18:44:47.456Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "68ab5daca652b8a97278a5d4"
+  },
+  "classCode": "AI1801-AA",
+  "semester": "Fall 2025",
+  "maxSize": 30,
+  "createdAt": {
+    "$date": "2025-08-24T18:45:00.142Z"
+  },
+  "updatedAt": {
+    "$date": "2025-08-24T18:45:00.142Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "68ab5dc3a652b8a97278a5d8"
+  },
+  "classCode": "MKT1815-DIG",
+  "semester": "Summer 2025",
+  "maxSize": 30,
+  "createdAt": {
+    "$date": "2025-08-24T18:45:23.517Z"
+  },
+  "updatedAt": {
+    "$date": "2025-08-24T18:45:23.517Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "68ab5e72a652b8a97278a5f4"
+  },
+  "classCode": "IB1806-LOG",
+  "semester": "Summer 2024",
+  "maxSize": 30,
+  "createdAt": {
+    "$date": "2025-08-24T18:48:18.600Z"
+  },
+  "updatedAt": {
+    "$date": "2025-08-24T18:48:18.600Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "68ab5e94a652b8a97278a5f8"
+  },
+  "classCode": "SE1809-AI",
+  "semester": "Summer 2024",
+  "maxSize": 30,
+  "createdAt": {
+    "$date": "2025-08-24T18:48:52.652Z"
+  },
+  "updatedAt": {
+    "$date": "2025-08-24T18:48:52.652Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "68ab5e9fa652b8a97278a5fc"
+  },
+  "classCode": "MC1808-PR",
+  "semester": "Summer 2024",
+  "maxSize": 30,
+  "createdAt": {
+    "$date": "2025-08-24T18:49:03.750Z"
+  },
+  "updatedAt": {
+    "$date": "2025-08-24T18:49:03.750Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "68ab5ea8a652b8a97278a600"
+  },
+  "classCode": "MKT1814-DIG",
+  "semester": "Summer 2024",
+  "maxSize": 30,
+  "createdAt": {
+    "$date": "2025-08-24T18:49:12.603Z"
+  },
+  "updatedAt": {
+    "$date": "2025-08-24T18:49:12.603Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "68ab5ed1a652b8a97278a60c"
+  },
+  "classCode": "IA1802-SS",
+  "semester": "Fall 2024",
+  "maxSize": 30,
+  "createdAt": {
+    "$date": "2025-08-24T18:49:53.405Z"
+  },
+  "updatedAt": {
+    "$date": "2025-08-24T18:49:53.405Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "68aeb80b413d7d4c2cdfbe15"
+  },
+  "classCode": "SE1809-NJ",
+  "semester": "Fall 2025",
+  "students": [],
+  "maxSize": 30,
+  "createdAt": {
+    "$date": "2025-08-27T07:47:23.079Z"
+  },
+  "updatedAt": {
+    "$date": "2025-08-27T07:47:23.079Z"
+  },
+  "__v": 0
+}]

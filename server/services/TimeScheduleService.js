@@ -1,6 +1,6 @@
 const Class = require('../model/Class'); // Sử dụng model Class
 const TimeSchedule = require('../model/TimeSchedule');
-
+const ApiError = require('../errors/api-error'); // <-- SỬA LẠI ĐƯỜNG DẪN NẾU CẦN
 class TimeScheduleService {
     /**
      * Lấy toàn bộ lịch học của một sinh viên.
@@ -39,26 +39,38 @@ class TimeScheduleService {
      * @returns {Promise<object>} - Báo cáo kết quả xếp lớp.
      */
      static async assignStudentsToClasses(subjectId, semester, studentIds) {
+        console.log("  [TimeScheduleService] Received request to assign students.");
+        console.log(`  --> Subject: ${subjectId}, Semester: ${semester}, Student Count: ${studentIds.length}`);
+
         // 1. Tìm tất cả các lớp học phần cho môn học và học kỳ đã cho.
+        console.log("  1. Finding available classes...");
         const classes = await Class.find({ subject: subjectId, semester: semester });
+        
         if (!classes || classes.length === 0) {
+            console.error(`  --> CRITICAL: No classes found for subject ${subjectId} in semester ${semester}. Cannot assign students.`);
             throw new ApiError(404, `No classes found for subject ${subjectId} in semester ${semester}.`);
         }
+        console.log(`  --> Found ${classes.length} class(es).`);
+
         const assignedStudents = [];
         const unassignedStudents = [];
-        const bulkUpdateOps = []; // Mảng chứa các lệnh cập nhật database
+        const bulkUpdateOps = [];
 
         // 2. Lặp qua từng sinh viên để tìm lớp trống.
+        console.log("  2. Looping through students to find empty slots...");
         for (const studentId of studentIds) {
             let isAssigned = false;
-
-            // Tìm một lớp còn chỗ trống
             for (const cls of classes) {
-                // Kiểm tra xem lớp còn chỗ và sinh viên chưa có trong lớp
-                if (cls.students.length < cls.maxSize && !cls.students.includes(studentId)) {
-                    // Thêm sinh viên vào lớp (trong bộ nhớ) để cập nhật sĩ số tạm thời
-                    cls.students.push(studentId);
-                    // Chuẩn bị lệnh cập nhật cho bulk operation
+                const studentIdsInClass = cls.students.map(id => id.toString());
+                const isFull = cls.students.length >= cls.maxSize;
+                const alreadyEnrolled = studentIdsInClass.includes(studentId);
+
+                // Log chi tiết điều kiện
+                // console.log(`    - Checking Class ${cls.classCode}: Size (${cls.students.length}/${cls.maxSize}), Student ${studentId} enrolled? ${alreadyEnrolled}`);
+
+                if (!isFull && !alreadyEnrolled) {
+                    console.log(`    --> SUCCESS: Assigning student ${studentId} to class ${cls.classCode}`);
+                    cls.students.push(studentId); // Cập nhật sĩ số tạm thời
                     bulkUpdateOps.push({
                         updateOne: {
                             filter: { _id: cls._id },
@@ -67,29 +79,102 @@ class TimeScheduleService {
                     });
                     assignedStudents.push(studentId);
                     isAssigned = true;
-                    break; // Ngắt vòng lặp, chuyển sang sinh viên tiếp theo
+                    break; 
                 }
             }
 
-            // Nếu không tìm được lớp nào cho sinh viên này
             if (!isAssigned) {
+                console.warn(`    --> WARNING: Could not find a class for student ${studentId}. All classes might be full.`);
                 unassignedStudents.push(studentId);
             }
         }
 
-        // 3. Thực thi tất cả các lệnh cập nhật vào database một lần duy nhất
+        // 3. Thực thi tất cả các lệnh cập nhật vào database.
+        console.log(`  3. Preparing to execute ${bulkUpdateOps.length} update operations...`);
         if (bulkUpdateOps.length > 0) {
             await Class.bulkWrite(bulkUpdateOps);
+            console.log("  --> Bulk write to database successful.");
+        } else {
+            console.log("  --> No new assignments to write to database.");
         }
 
         // 4. Trả về kết quả
-        return {
+        const report = {
             totalStudentsToAssign: studentIds.length,
             assignedCount: assignedStudents.length,
             unassignedCount: unassignedStudents.length,
             assignedStudents,
             unassignedStudents,
         };
+        console.log("  4. Returning assignment report.");
+        return report;
+    }
+
+    static async createSchedule(scheduleData) {
+        const { classId, teacherId, slotNumber, dayOfWeek, startTime, endTime, room } = scheduleData;
+
+        // --- BƯỚC 1: VALIDATE DỮ LIỆU ---
+
+        // 1.1: Kiểm tra xem classId có tồn tại không
+        const classExists = await Class.findById(classId);
+        if (!classExists) {
+            throw new ApiError(404, `Class with ID ${classId} not found.`);
+        }
+        
+        // 1.2: Kiểm tra xem LỚP NÀY đã có lịch học vào ĐÚNG NGÀY VÀ SLOT ĐÓ chưa
+        const scheduleExistsForClass = await TimeSchedule.findOne({ 
+            class: classId, 
+            dayOfWeek: dayOfWeek, 
+            slotNumber: slotNumber 
+        });
+        if (scheduleExistsForClass) {
+            throw new ApiError(409, `This class already has a schedule on ${dayOfWeek} at slot ${slotNumber}.`);
+        }
+
+        // 1.3: Kiểm tra xem PHÒNG HỌC này có bị trùng lịch vào ĐÚNG NGÀY VÀ SLOT ĐÓ không
+        const roomIsOccupied = await TimeSchedule.findOne({
+            room: room,
+            dayOfWeek: dayOfWeek,
+            slotNumber: slotNumber
+        });
+        if (roomIsOccupied) {
+            throw new ApiError(409, `Room ${room} is already occupied on ${dayOfWeek} at slot ${slotNumber} by another class.`);
+        }
+
+        // 1.4: (THÊM MỚI) Kiểm tra xem GIẢNG VIÊN này có bị trùng lịch vào ĐÚNG NGÀY VÀ SLOT ĐÓ không
+        const teacherIsBusy = await TimeSchedule.findOne({
+            teacher: teacherId,
+            dayOfWeek: dayOfWeek,
+            slotNumber: slotNumber
+        });
+        if (teacherIsBusy) {
+            throw new ApiError(409, `This teacher is already scheduled for another class on ${dayOfWeek} at slot ${slotNumber}.`);
+        }
+
+
+        // --- BƯỚC 2: TẠO BẢN GHI MỚI ---
+        try {
+            const newSchedule = new TimeSchedule({
+                class: classId,
+                teacher: teacherId,
+                slotNumber,
+                dayOfWeek,
+                startTime,
+                endTime,
+                room
+            });
+
+            await newSchedule.save();
+
+            return {
+                success: true,
+                message: "Time schedule created successfully.",
+                data: newSchedule
+            };
+        } catch (error) {
+            // Ném lại lỗi gốc để global error handler xử lý
+            throw error;
+        }
     }
 }
 
