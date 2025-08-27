@@ -46,14 +46,14 @@ class UserService {
         fullName: user.fullName,
         dateOfBirth: user.dateOfBirth,
         phoneNumber: user.phoneNumber,
-        role: user.role
+        role: user.role,
       });
       await newUser.save();
       return { success: true, data: newUser };
     } catch (error) {
       return {
         success: false,
-        message: "Internal server error"
+        message: "Internal server error",
       };
     }
   }
@@ -98,10 +98,15 @@ class UserService {
     try {
       const { email, ...allowedUpdates } = updateData;
 
-      const allowedFields = ['fullName', 'dateOfBirth', 'phoneNumber', 'avatar'];
+      const allowedFields = [
+        "fullName",
+        "dateOfBirth",
+        "phoneNumber",
+        "avatar",
+      ];
       const filteredUpdates = {};
 
-      Object.keys(allowedUpdates).forEach(key => {
+      Object.keys(allowedUpdates).forEach((key) => {
         if (allowedFields.includes(key) && allowedUpdates[key] !== undefined) {
           filteredUpdates[key] = allowedUpdates[key];
         }
@@ -111,7 +116,7 @@ class UserService {
         userId,
         filteredUpdates,
         { new: true, runValidators: true }
-      ).select('-password');
+      ).select("-password");
 
       if (!updatedUser) {
         return {
@@ -120,15 +125,14 @@ class UserService {
         };
       }
 
-      // Convert user to plain object and format dateOfBirth
       const userData = updatedUser.toObject();
       if (userData.dateOfBirth) {
-        userData.dateOfBirth = userData.dateOfBirth.toISOString().split('T')[0];
+        userData.dateOfBirth = userData.dateOfBirth.toISOString().split("T")[0];
       }
 
       return {
         success: true,
-        message: "Cập nhật thành công",
+        message: "Cập nhật thông tin cá nhân thành công!",
         data: userData,
       };
     } catch (error) {
@@ -139,9 +143,19 @@ class UserService {
     }
   }
 
+  // if (
+  //         allowedUpdates.hasOwnProperty('dateOfBirth') &&
+  //         (!allowedUpdates.dateOfBirth || allowedUpdates.dateOfBirth.trim() === "")
+  //       ) {
+  //         return {
+  //           success: false,
+  //           message: "Ngày sinh không được để trống",
+  //         };
+  //       }
+
   async getUserById(userId) {
     try {
-      const user = await User.findById(userId).select('-password');
+      const user = await User.findById(userId).select("-password");
       if (!user) {
         return {
           success: false,
@@ -151,7 +165,7 @@ class UserService {
 
       const userData = user.toObject();
       if (userData.dateOfBirth) {
-        userData.dateOfBirth = userData.dateOfBirth.toISOString().split('T')[0];
+        userData.dateOfBirth = userData.dateOfBirth.toISOString().split("T")[0];
       }
 
       return {
