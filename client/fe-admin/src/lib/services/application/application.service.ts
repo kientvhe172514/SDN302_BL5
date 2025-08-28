@@ -7,7 +7,7 @@ export interface Application {
   _id: string;
   student: {
     _id: string;
-    fullName: string;
+    name: string;
     email: string;
     studentId: string;
   };
@@ -16,7 +16,7 @@ export interface Application {
   status: 'pending' | 'approved' | 'rejected';
   processedBy?: {
     _id: string;
-    fullName: string;
+    name: string;
     email: string;
     role: string;
   };
@@ -46,65 +46,6 @@ export interface ApplicationStats {
 }
 
 // Application Service Functions
-export const createApplication = async (data: CreateApplicationRequest) => {
-  try {
-    const response = await axiosService.getAxiosInstance().post(Endpoints.Application.CREATE, data);
-    return response.data;
-  } catch (error: any) {
-    if (error instanceof AxiosError) {
-      return error.response?.data;
-    }
-    return { success: false, message: "Lỗi không xác định" };
-  }
-};
-
-export const getMyApplications = async () => {
-  try {
-    const response = await axiosService.getAxiosInstance().get(Endpoints.Application.GET_MY_APPLICATIONS);
-    return response.data;
-  } catch (error: any) {
-    if (error instanceof AxiosError) {
-      return error.response?.data;
-    }
-    return { success: false, message: "Lỗi không xác định" };
-  }
-};
-
-export const getApplicationById = async (id: string) => {
-  try {
-    const response = await axiosService.getAxiosInstance().get(Endpoints.Application.GET_BY_ID(id));
-    return response.data;
-  } catch (error: any) {
-    if (error instanceof AxiosError) {
-      return error.response?.data;
-    }
-    return { success: false, message: "Lỗi không xác định" };
-  }
-};
-
-export const updateApplication = async (id: string, data: Partial<CreateApplicationRequest>) => {
-  try {
-    const response = await axiosService.getAxiosInstance().put(Endpoints.Application.UPDATE(id), data);
-    return response.data;
-  } catch (error: any) {
-    if (error instanceof AxiosError) {
-      return error.response?.data;
-    }
-    return { success: false, message: "Lỗi không xác định" };
-  }
-};
-
-export const deleteApplication = async (id: string) => {
-  try {
-    const response = await axiosService.getAxiosInstance().delete(Endpoints.Application.DELETE(id));
-    return response.data;
-  } catch (error: any) {
-    if (error instanceof AxiosError) {
-      return error.response?.data;
-    }
-    return { success: false, message: "Lỗi không xác định" };
-  }
-};
 
 export const getApplicationTypes = async () => {
   try {

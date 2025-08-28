@@ -23,7 +23,7 @@ const SlotAttendanceSchema = new Schema({
         },
         status: {
             type: String,
-            enum: ['present', 'absent', 'late', 'not_yet'],
+            enum: ['present', 'absent', 'not_yet'],
             default: 'not_yet'
         },
         // Ghi lại thời gian khi trạng thái của RIÊNG sinh viên này được cập nhật

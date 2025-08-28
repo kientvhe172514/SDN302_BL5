@@ -1,0 +1,19 @@
+[{
+  "_id": {
+    "$oid": "68aeb7c1413d7d4c2cdfbdfa"
+  },
+  "student": {
+    "$oid": "68ad142d66552478fd8fa750"
+  },
+  "subject": {
+    "$oid": "68ab2d269acf32f94a6fb646"
+  },
+  "semester": "Fall 2024",
+  "__v": 0,
+  "createdAt": {
+    "$date": "2025-08-27T07:46:09.434Z"
+  },
+  "updatedAt": {
+    "$date": "2025-08-27T07:46:09.434Z"
+  }
+}]

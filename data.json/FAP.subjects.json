@@ -1,0 +1,192 @@
+[{
+  "_id": {
+    "$oid": "68ab2d269acf32f94a6fb643"
+  },
+  "subjectCode": "CS102",
+  "name": "Cấu trúc dữ liệu và giải thuật",
+  "description": "Môn học nghiên cứu về các cấu trúc dữ liệu cơ bản và các thuật toán sắp xếp, tìm kiếm.",
+  "credits": 4,
+  "__v": 0,
+  "createdAt": {
+    "$date": "2025-08-24T15:17:58.516Z"
+  },
+  "updatedAt": {
+    "$date": "2025-08-24T15:17:58.516Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "68ab2d269acf32f94a6fb644"
+  },
+  "subjectCode": "CS201",
+  "name": "Lập trình hướng đối tượng",
+  "description": "Môn học giới thiệu về lập trình hướng đối tượng với các khái niệm như class, object, inheritance, polymorphism.",
+  "credits": 3,
+  "__v": 0,
+  "createdAt": {
+    "$date": "2025-08-24T15:17:58.516Z"
+  },
+  "updatedAt": {
+    "$date": "2025-08-24T15:17:58.516Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "68ab2d269acf32f94a6fb645"
+  },
+  "subjectCode": "CS202",
+  "name": "Cơ sở dữ liệu",
+  "description": "Môn học cung cấp kiến thức về thiết kế và quản lý cơ sở dữ liệu quan hệ.",
+  "credits": 4,
+  "__v": 0,
+  "createdAt": {
+    "$date": "2025-08-24T15:17:58.516Z"
+  },
+  "updatedAt": {
+    "$date": "2025-08-24T15:17:58.516Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "68ab2d269acf32f94a6fb648"
+  },
+  "subjectCode": "AI",
+  "name": "Trí tuệ nhân tạo",
+  "description": "Môn học giới thiệu về các thuật toán và kỹ thuật trong lĩnh vực trí tuệ nhân tạo.",
+  "credits": 4,
+  "__v": 0,
+  "createdAt": {
+    "$date": "2025-08-24T15:17:58.516Z"
+  },
+  "updatedAt": {
+    "$date": "2025-08-24T15:51:59.122Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "68ab2d269acf32f94a6fb64d"
+  },
+  "subjectCode": "CS501",
+  "name": "Đồ án tốt nghiệp",
+  "description": "Môn học thực hiện dự án cuối khóa để tổng hợp và áp dụng kiến thức đã học.",
+  "credits": 6,
+  "__v": 0,
+  "createdAt": {
+    "$date": "2025-08-24T15:17:58.517Z"
+  },
+  "updatedAt": {
+    "$date": "2025-08-24T15:17:58.517Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "68ab2d269acf32f94a6fb647"
+  },
+  "subjectCode": "CS302",
+  "name": "Phát triển ứng dụng di động",
+  "description": "Môn học về phát triển ứng dụng cho các thiết bị di động sử dụng các công nghệ như React Native, Flutter.",
+  "credits": 3,
+  "__v": 0,
+  "createdAt": {
+    "$date": "2025-08-24T15:17:58.516Z"
+  },
+  "updatedAt": {
+    "$date": "2025-08-24T15:17:58.516Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "68ab2d269acf32f94a6fb649"
+  },
+  "subjectCode": "CS402",
+  "name": "Học máy",
+  "description": "Môn học về các thuật toán học máy và ứng dụng trong việc xử lý dữ liệu lớn.",
+  "credits": 4,
+  "__v": 0,
+  "createdAt": {
+    "$date": "2025-08-24T15:17:58.516Z"
+  },
+  "updatedAt": {
+    "$date": "2025-08-24T15:17:58.516Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "68ab2d269acf32f94a6fb646"
+  },
+  "subjectCode": "CS301",
+  "name": "Phát triển ứng dụng web",
+  "description": "Môn học học về các công nghệ phát triển web hiện đại như HTML, CSS, JavaScript, và các framework.",
+  "credits": 4,
+  "__v": 0,
+  "createdAt": {
+    "$date": "2025-08-24T15:17:58.516Z"
+  },
+  "updatedAt": {
+    "$date": "2025-08-24T15:17:58.516Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "68ab2d269acf32f94a6fb64a"
+  },
+  "subjectCode": "MATH101",
+  "name": "Toán học rời rạc",
+  "description": "Môn học cung cấp nền tảng toán học cần thiết cho khoa học máy tính.",
+  "credits": 3,
+  "__v": 0,
+  "createdAt": {
+    "$date": "2025-08-24T15:17:58.516Z"
+  },
+  "updatedAt": {
+    "$date": "2025-08-24T15:17:58.516Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "68ab2d269acf32f94a6fb64c"
+  },
+  "subjectCode": "ENG101",
+  "name": "Tiếng Anh chuyên ngành CNTT",
+  "description": "Môn học cung cấp từ vựng và kỹ năng tiếng Anh cần thiết trong lĩnh vực công nghệ thông tin.",
+  "credits": 2,
+  "__v": 0,
+  "createdAt": {
+    "$date": "2025-08-24T15:17:58.516Z"
+  },
+  "updatedAt": {
+    "$date": "2025-08-24T15:17:58.516Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "68ab2d269acf32f94a6fb642"
+  },
+  "subjectCode": "CS101",
+  "name": "Lập trình cơ bản",
+  "description": "Môn học cung cấp kiến thức cơ bản về lập trình máy tính, bao gồm các khái niệm cơ bản về thuật toán, cấu trúc dữ liệu và ngôn ngữ lập trình.",
+  "credits": 3,
+  "__v": 0,
+  "createdAt": {
+    "$date": "2025-08-24T15:17:58.515Z"
+  },
+  "updatedAt": {
+    "$date": "2025-08-24T15:17:58.515Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "68ab2d269acf32f94a6fb64b"
+  },
+  "subjectCode": "MATH102",
+  "name": "Xác suất thống kê",
+  "description": "Môn học về lý thuyết xác suất và thống kê ứng dụng trong khoa học dữ liệu.",
+  "credits": 3,
+  "__v": 0,
+  "createdAt": {
+    "$date": "2025-08-24T15:17:58.516Z"
+  },
+  "updatedAt": {
+    "$date": "2025-08-24T15:17:58.516Z"
+  }
+}]

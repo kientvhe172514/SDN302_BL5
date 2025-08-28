@@ -25,42 +25,25 @@ export default function ViewWishlistPage() {
   }, [userInfo]);
 
   const fetchWishlist = async () => {
-    if (!userInfo?.userId) {
-      console.log('Client - No user info available, skipping fetch');
-      setLoading(false);
-      return;
-    }
-
-    console.log('Client - Fetching wishlist for user:', userInfo.userId);
-    setLoading(true);
-    setError(null);
-    
     try {
+      setLoading(true);
+      setError(null);
+      
+      if (!userInfo?.userId) {
+        setError("Không tìm thấy thông tin người dùng");
+        return;
+      }
+      
       const response = await getMyWishlist(userInfo.userId);
-      console.log('Client - Full API response:', JSON.stringify(response, null, 2));
+      console.log('Wishlist response:', response);
       
       if (response && response.success) {
-        console.log('Client - Wishlist data received:', JSON.stringify(response.data, null, 2));
-        console.log('Client - Subjects array:', response.data?.subjects);
-        console.log('Client - Subjects length:', response.data?.subjects?.length);
-        
-        // Check if subjects array exists and has items
-        if (response.data?.subjects && Array.isArray(response.data.subjects)) {
-          console.log('Client - Each subject:', response.data.subjects.map((s: any, i: number) => ({
-            index: i,
-            subject: s,
-            hasSubjectCode: !!s?.subjectCode,
-            hasName: !!s?.name
-          })));
-        }
-        
         setWishlist(response.data);
       } else {
-        console.log('Client - API response not successful:', response);
         setError(response?.message || "Không thể tải danh sách wishlist");
       }
     } catch (err: any) {
-      console.error('Client - Error fetching wishlist:', err);
+      console.error('Error fetching wishlist:', err);
       setError(err?.message || "Có lỗi xảy ra khi tải dữ liệu");
     } finally {
       setLoading(false);
@@ -117,7 +100,7 @@ export default function ViewWishlistPage() {
             </AlertDescription>
           </Alert>
 
-          {wishlist && wishlist.subjects && wishlist.subjects.length > 0 ? (
+          {wishlist && wishlist.subjects.length > 0 ? (
             <Table>
               <TableHeader>
                 <TableRow>
@@ -131,8 +114,8 @@ export default function ViewWishlistPage() {
                   <TableRow key={subject._id}>
                     <TableCell className="font-medium">{subject.subjectCode}</TableCell>
                     <TableCell>
-                      <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
-                        Đã xếp lớp
+                      <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
+                        Đang chờ xếp lớp
                       </span>
                     </TableCell>
                     <TableCell>

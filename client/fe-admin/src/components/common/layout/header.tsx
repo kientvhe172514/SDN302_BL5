@@ -1,4 +1,5 @@
 import { SidebarTrigger } from "@/components/ui/sidebar";
+import { logout } from "@/utils/logout";
 import Image from "next/image";
 
 export function Header() {
@@ -12,7 +13,7 @@ export function Header() {
         <Image src="/2021-FPTU-Eng.jpg" alt="FPT" width={120} height={20} />
 
         {/* Right */}
-        <button className="bg-red-500 text-white px-3 py-1 rounded">
+        <button className="bg-red-500 text-white px-3 py-1 rounded" onClick={() => logout()}>
           Logout
         </button>
       </div>

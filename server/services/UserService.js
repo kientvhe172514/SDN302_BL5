@@ -46,14 +46,14 @@ class UserService {
         fullName: user.fullName,
         dateOfBirth: user.dateOfBirth,
         phoneNumber: user.phoneNumber,
-        role: user.role
+        role: user.role,
       });
       await newUser.save();
       return { success: true, data: newUser };
     } catch (error) {
       return {
         success: false,
-        message: "Internal server error"
+        message: "Internal server error",
       };
     }
   }
@@ -98,10 +98,15 @@ class UserService {
     try {
       const { email, password, currentPassword, ...allowedUpdates } = updateData;
 
-      const allowedFields = ['fullName', 'dateOfBirth', 'phoneNumber', 'avatar'];
+      const allowedFields = [
+        "fullName",
+        "dateOfBirth",
+        "phoneNumber",
+        "avatar",
+      ];
       const filteredUpdates = {};
 
-      Object.keys(allowedUpdates).forEach(key => {
+      Object.keys(allowedUpdates).forEach((key) => {
         if (allowedFields.includes(key) && allowedUpdates[key] !== undefined) {
           filteredUpdates[key] = allowedUpdates[key];
         }
@@ -118,7 +123,7 @@ class UserService {
         userId,
         filteredUpdates,
         { new: true, runValidators: true }
-      ).select('-password');
+      ).select("-password");
 
       if (!updatedUser) {
         return {
@@ -129,7 +134,7 @@ class UserService {
 
       const userData = updatedUser.toObject();
       if (userData.dateOfBirth) {
-        userData.dateOfBirth = userData.dateOfBirth.toISOString().split('T')[0];
+        userData.dateOfBirth = userData.dateOfBirth.toISOString().split("T")[0];
       }
 
       return {
@@ -157,7 +162,7 @@ class UserService {
 
   async getUserById(userId) {
     try {
-      const user = await User.findById(userId).select('-password');
+      const user = await User.findById(userId).select("-password");
       if (!user) {
         return {
           success: false,
@@ -167,7 +172,7 @@ class UserService {
 
       const userData = user.toObject();
       if (userData.dateOfBirth) {
-        userData.dateOfBirth = userData.dateOfBirth.toISOString().split('T')[0];
+        userData.dateOfBirth = userData.dateOfBirth.toISOString().split("T")[0];
       }
 
       return {

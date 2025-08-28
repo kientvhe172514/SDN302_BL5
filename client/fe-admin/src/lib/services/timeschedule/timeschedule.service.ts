@@ -1,3 +1,6 @@
+import { Filter } from 'lucide-react';
+import { ClassListResponse } from '@/models/class/class.model';
+import { ClassQuery } from '@/models/class/class.model';
 import { AxiosError } from "axios";
 import { Endpoints } from "@/lib/endpoints";
 import  axiosService from "../config/axios.service";
@@ -33,6 +36,8 @@ export interface AssignSubjectsPayload {
 export const getStudents = async (query?: UserQuery): Promise<UserListResponse> => {
     try {
         const params = new URLSearchParams();
+        // Thêm tham số để lọc theo vai trò
+        params.append("role", "student"); 
         if (query?.page) params.append("page", query.page.toString());
         if (query?.limit) params.append("limit", query.limit.toString());
         if (query?.search) params.append("search", query.search);
@@ -42,12 +47,62 @@ export const getStudents = async (query?: UserQuery): Promise<UserListResponse> 
         const response = await axiosService
             .getAxiosInstance()
             .get(`${Endpoints.User.GET_ALL}?${params.toString()}`);
-        
+            if (response.data.success && Array.isArray(response.data.data.users)) {
+                response.data.data.users = response.data.data.users.filter(user => user.role === 'student');
+            }
         return response.data;
     } catch (error) {
         console.error("Failed to fetch students:", error);
-        // Trả về cấu trúc lỗi nhất quán
-        return { success: false, data: { users: [], total: 0, pages: 0 } };
+        return { success: false, message: "Failed to fetch students", data: { users: [], total: 0, pages: 0 } };
+    }
+};
+
+
+/**
+ * Lấy danh sách người   dùng có vai trò là GIẢNG VIÊN.
+ */
+export const getTeachers = async (query?: UserQuery): Promise<UserListResponse> => {
+    try {
+        const params = new URLSearchParams();
+        // Thêm tham số để lọc theo vai trò
+        params.append("role", "teacher");
+        if (query?.page) params.append("page", query.page.toString());
+        if (query?.limit) params.append("limit", query.limit.toString());
+        if (query?.search) params.append("search", query.search);
+
+        const response = await axiosService
+            .getAxiosInstance()
+            .get(`${Endpoints.User.GET_ALL}?${params.toString()}`);
+        
+            if (response.data.success && Array.isArray(response.data.data.users)) {
+                response.data.data.users = response.data.data.users.filter(user => user.role === 'teacher');
+            }
+            
+            return response.data;
+    } catch (error) {
+        console.error("Failed to fetch teachers:", error);
+        return { success: false, message: "Failed to fetch teachers", data: { users: [], total: 0, pages: 0 } };
+    }
+};
+
+/**
+ * Lấy danh sách các lớp học phần.
+ */
+export const getClasses = async (query?: ClassQuery): Promise<ClassListResponse> => {
+    try {
+        const params = new URLSearchParams();
+        if (query?.page) params.append("page", query.page.toString());
+        if (query?.limit) params.append("limit", query.limit.toString());
+        if (query?.search) params.append("search", query.search);
+
+        const response = await axiosService
+            .getAxiosInstance()
+            .get(`${Endpoints.Class.GET_ALL}?${params.toString()}`);
+            
+        return response.data;
+    } catch (error) {
+        console.error("Failed to fetch classes:", error);
+        return { success: false, message: "Failed to fetch classes", data: { classes: [], total: 0 } };
     }
 };
 
@@ -84,3 +139,32 @@ export const assignSubjectsToStudents = async (payload: AssignSubjectsPayload) =
         return { success: false, message: "Lỗi không xác định khi gán môn học" };
     }
 }
+
+
+// --- HÀM MỚI ---
+export interface CreateSchedulePayload {
+    classId: string;
+    teacherId: string;
+    slotNumber: number;
+    dayOfWeek: string;
+    startTime: string;
+    endTime: string;
+    room: string;
+}
+
+export const createTimeSchedule = async (payload: CreateSchedulePayload) => {
+    try {
+        // Giả định endpoint của bạn là /api/schedules/
+        const response = await axiosService.getAxiosInstance().post(Endpoints.Timeshchedule.CREATE_TIMESCHEDULE, payload);
+        return response.data;
+    } catch (error: any) {
+        if (error instanceof AxiosError) {
+            return error.response?.data;
+        }
+        return { success: false, message: "Lỗi không xác định khi tạo lịch học" };
+    }
+}
+
+
+
+

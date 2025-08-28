@@ -8,3 +8,18 @@ export interface Class {
     semester:string,
     maxSize:30
 }
+
+export interface ClassQuery {
+    page?: number;
+    limit?: number;
+    search?: string;
+}
+
+export interface ClassListResponse {
+    success: boolean;
+    message?: string;
+    data: {
+        classes: Class[];
+        total: number;
+    };
+}
