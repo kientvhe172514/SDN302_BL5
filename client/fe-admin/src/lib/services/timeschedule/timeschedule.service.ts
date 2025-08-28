@@ -166,5 +166,107 @@ export const createTimeSchedule = async (payload: CreateSchedulePayload) => {
 }
 
 
+export interface RoomQuery {
+    page?: number;
+    limit?: number;
+    building?: string;
+    roomType?: string;
+    isActive?: boolean;
+}
+
+export interface Room {
+    _id: string;
+    roomCode: string;
+    roomName: string;
+    building: string;
+    floor: number;
+    capacity: number;
+    roomType: string;
+    facilities: string[];
+    isActive: boolean;
+    description?: string;
+}
+
+export interface RoomListResponse {
+    success: boolean;
+    message: string;
+    data: {
+        rooms: Room[];
+        total: number;
+        pages: number;
+        currentPage: number;
+    };
+}
+
+export const getRooms = async (query?: RoomQuery): Promise<RoomListResponse> => {
+    try {
+        const params = new URLSearchParams();
+        if (query?.page) params.append("page", query.page.toString());
+        if (query?.limit) params.append("limit", query.limit.toString());
+        if (query?.building) params.append("building", query.building);
+        if (query?.roomType) params.append("roomType", query.roomType);
+        if (query?.isActive !== undefined) params.append("isActive", query.isActive.toString());
+
+        const response = await axiosService
+            .getAxiosInstance()
+            .get(`${Endpoints.Room.GET_ALL}?${params.toString()}`);
+            
+        return response.data;
+    } catch (error) {
+        console.error("Failed to fetch rooms:", error);
+        return { success: false, message: "Failed to fetch rooms", data: { rooms: [], total: 0, pages: 0, currentPage: 1 } };
+    }
+};
+
+// --- HÀM MỚI ĐỂ KIỂM TRA LỊCH TRỐNG ---
+
+export interface ScheduleAvailabilityQuery {
+    classId: string;
+    teacherId: string;
+    dayOfWeek: string;
+}
+
+export interface ScheduleAvailabilityData {
+    occupiedSlotsForClass: number[];
+    occupiedSlotsForTeacher: number[];
+    occupiedRoomsBySlot: { [key: number]: string[] };
+}
+
+export interface ScheduleAvailabilityResponse {
+    success: boolean;
+    message?: string;
+    data: ScheduleAvailabilityData;
+}
+
+/**
+ * Lấy danh sách các slot và phòng đã bị chiếm dựa trên lớp, giảng viên và ngày.
+ */
+export const getScheduleAvailability = async (query: ScheduleAvailabilityQuery): Promise<ScheduleAvailabilityResponse> => {
+    try {
+        const params = new URLSearchParams();
+        params.append("classId", query.classId);
+        params.append("teacherId", query.teacherId);
+        params.append("dayOfWeek", query.dayOfWeek);
+
+        const response = await axiosService
+            .getAxiosInstance()
+            .get(`${Endpoints.Timeshchedule.GET_AVAILABILITY}?${params.toString()}`);
+            
+        return response.data;
+    } catch (error) {
+        console.error("Failed to fetch schedule availability:", error);
+        return { 
+            success: false, 
+            message: "Failed to fetch schedule availability", 
+            data: { 
+                occupiedSlotsForClass: [], 
+                occupiedSlotsForTeacher: [], 
+                occupiedRoomsBySlot: {} 
+            } 
+        };
+    }
+};
+
+
 
 

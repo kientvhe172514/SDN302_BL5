@@ -59,4 +59,7 @@ export class Endpoints {
     GET_STATS: "subjects/stats",
     GET_BY_CREDITS: "subjects/credits",
   };
+  static readonly SCHEDULE = {
+    GET_MY_SCHE: 'schedules/my-schedule',
+  }
 }

@@ -6,7 +6,7 @@ export class Endpoints {
     FORGOT_PASSWORD: "auth/forgot-password",
     CHANGE_PASSWORD: "auth/change-password",
     VERIFY_FORGOT_PASSWORD: "auth/verify-otp-reset-password",
-    
+
     REGISTER: "auth/register",
     VERIFY_REGISTRATION_OTP: "auth/verify-registration-otp",
     RESEND_REGISTRATION_OTP: "auth/resend-registration-otp",
@@ -37,10 +37,20 @@ export class Endpoints {
   }
 
   static readonly Timeshchedule = {
+    GET_AVAILABILITY: 'schedules/availability',
     GET_MY_SCHEDULE: 'timeschedule/my-schedule',
     ASSIGN_SUBJECTS: 'registrations/assign',
     CREATE_TIMESCHEDULE: 'schedules/create'
   }
+
+  static readonly Room = {
+    GET_ALL: 'rooms',
+    GET_BY_ID: (id: string) => `rooms/${id}`,
+    CREATE: 'rooms',
+    UPDATE: (id: string) => `rooms/${id}`,
+    DELETE: (id: string) => `rooms/${id}`,
+    GET_BUILDINGS: 'rooms/buildings'
+  };
 
   static readonly Application = {
     

@@ -98,6 +98,8 @@ export default function SubjectsPage() {
           data as UpdateSubjectRequest
         );
         toast.success("Cập nhật môn học thành công");
+        // Reload subjects to get updated data including documents
+        await loadSubjects();
       } else {
         await subjectService.createSubject(data as CreateSubjectRequest);
         toast.success("Tạo môn học thành công");
@@ -257,6 +259,12 @@ export default function SubjectsPage() {
         isSubmitting={isSubmitting}
         onFormDataChange={handleFormDataChange}
         onSubmit={handleFormSubmit}
+        onDocumentsChange={async () => {
+          await loadSubjects();
+        }}
+        onSubjectUpdate={(updatedSubject) => {
+          setEditingSubject(updatedSubject);
+        }}
       />
     </div>
   );

@@ -1,0 +1,14 @@
+[{
+  "_id": {
+    "$oid": "68aec4d0461460172d946552"
+  },
+  "majorCode": "SE",
+  "name": "Software Engineering"
+},
+{
+  "_id": {
+    "$oid": "68aec4d0461460172d946553"
+  },
+  "majorCode": "MKT",
+  "name": "Marketing"
+}]

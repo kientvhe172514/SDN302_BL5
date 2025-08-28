@@ -18,11 +18,10 @@ class RegistrationService {
                 });
             }
         }
-
+        //check sinh vien ngành nào và kỳ nào thì mới được đăng ký học phần của ngành đó và kỳ đó
         if (registrationsToCreate.length === 0) {
             return { success: true, message: "No registrations to create." };
         }
-
         let registrationResult;
         try {
             // Dùng insertMany để thêm tất cả bản ghi một cách hiệu quả.

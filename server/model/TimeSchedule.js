@@ -32,10 +32,20 @@ const timeScheduleSchema = new Schema({
         type: String,
         required: true
     },
-    room: { // Thêm phòng học
-        type: String
+    // SỬA LẠI: Thay đổi room thành reference đến Room model
+    room: {
+        type: Schema.Types.ObjectId,
+        ref: 'Room',
+        required: true
     }
-}, { timestamps: true });
+}, { 
+    timestamps: true 
+});
 
+// Index để đảm bảo không trung lập lịch học
 timeScheduleSchema.index({ class: 1, dayOfWeek: 1, slotNumber: 1 }, { unique: true });
+
+// Index để kiểm tra xung đột phòng học
+timeScheduleSchema.index({ room: 1, dayOfWeek: 1, slotNumber: 1 });
+
 module.exports = mongoose.model('TimeSchedule', timeScheduleSchema);

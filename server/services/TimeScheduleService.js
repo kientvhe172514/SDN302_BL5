@@ -8,27 +8,34 @@ class TimeScheduleService {
      * @returns {Promise<Array>} - Mảng các lịch học đã được populate thông tin chi tiết
      */
     static async getStudentSchedule(studentId) {
-        // 1. Tìm tất cả các lớp có chứa studentId trong mảng 'students'
-        const studentClasses = await Class.find({ students: studentId }).select('_id').lean();
-        if (!studentClasses || studentClasses.length === 0) {
-            return []; // Sinh viên này chưa được xếp vào lớp nào
+        try {
+            const studentClasses = await Class.find({ students: studentId }).select('_id').lean();
+            if (!studentClasses || studentClasses.length === 0) {
+                return [];
+            }
+            
+            const classIds = studentClasses.map(cls => cls._id);
+            
+            const schedules = await TimeSchedule.find({ class: { $in: classIds } })
+                .populate({
+                    path: 'class',
+                    // Xóa 'teacher' khỏi select
+                    select: 'classCode subject semester', 
+                    populate: {
+                        // Giờ đây populate không cần là mảng nữa
+                        path: 'subject',
+                        select: 'name subjectCode'
+                    }
+                })
+                .populate('teacher', 'fullName email') // Giảng viên của buổi học (vẫn giữ lại)
+                .sort({ dayOfWeek: 1, startTime: 1 })
+                .lean();
+            
+            return schedules;
+        } catch (error) {
+            console.error("!!! AN ERROR OCCURRED in getStudentSchedule service:", error);
+            throw new ApiError(500, "Failed to get student schedule due to a server error.");
         }
-        // 2. Lấy ra danh sách ID của các lớp học
-        const classIds = studentClasses.map(cls => cls._id);
-        // 3. Tìm tất cả lịch học thuộc các lớp đó (logic này giữ nguyên)
-        const schedules = await TimeSchedule.find({ class: { $in: classIds } })
-            .populate({
-                path: 'class',
-                select: 'classCode subject semester',
-                populate: {
-                    path: 'subject',
-                    select: 'subjectName subjectCode'
-                }
-            })
-            .populate('teacher', 'fullName email')
-            .sort({ dayOfWeek: 1, startTime: 1 })
-            .lean();
-        return schedules;
     }
 
      /**
@@ -88,7 +95,6 @@ class TimeScheduleService {
                 unassignedStudents.push(studentId);
             }
         }
-
         // 3. Thực thi tất cả các lệnh cập nhật vào database.
         console.log(`  3. Preparing to execute ${bulkUpdateOps.length} update operations...`);
         if (bulkUpdateOps.length > 0) {
@@ -176,6 +182,46 @@ class TimeScheduleService {
             throw error;
         }
     }
+    
+    static async getScheduleAvailability(classId, teacherId, dayOfWeek) {
+        try {
+            // Tìm các slot mà LỚP này đã có lịch
+            const classSchedules = await TimeSchedule.find({ class: classId, dayOfWeek }).select('slotNumber');
+            const occupiedSlotsForClass = classSchedules.map(s => s.slotNumber);
+    
+            // Tìm các slot mà GIẢNG VIÊN này đã có lịch
+            const teacherSchedules = await TimeSchedule.find({ teacher: teacherId, dayOfWeek }).select('slotNumber');
+            const occupiedSlotsForTeacher = teacherSchedules.map(s => s.slotNumber);
+    
+            // Tìm tất cả các phòng đã có lịch trong ngày hôm đó, gom nhóm theo slot
+            const allSchedulesOnDay = await TimeSchedule.find({ dayOfWeek }).select('slotNumber room');
+            
+            const occupiedRoomsBySlot = allSchedulesOnDay.reduce((acc, schedule) => {
+                const slot = schedule.slotNumber;
+                if (!acc[slot]) {
+                    acc[slot] = [];
+                }
+                // Đảm bảo room ID không bị null và được chuyển thành string
+                if (schedule.room) {
+                     acc[slot].push(schedule.room.toString());
+                }
+                return acc;
+            }, {});
+    
+            return {
+                success: true,
+                data: {
+                    occupiedSlotsForClass,
+                    occupiedSlotsForTeacher,
+                    occupiedRoomsBySlot
+                }
+            };
+        } catch (error) {
+            // Trong thực tế, bạn nên log lỗi này
+            throw new ApiError(500, "Could not retrieve schedule availability.");
+        }
+    }
 }
+
 
 module.exports = TimeScheduleService;

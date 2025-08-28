@@ -34,6 +34,14 @@ const userSchema = new Schema(
       enum: ["student", "teacher", "admin"],
       default: "student",
     },
+    currentSemester: {
+      type: Number, // Kỳ học hiện tại, ví dụ: 7
+      min: 1
+  },
+    major: {
+      type: Schema.Types.ObjectId,
+      ref: 'Major' 
+  },
   },
   { timestamps: true }
 );

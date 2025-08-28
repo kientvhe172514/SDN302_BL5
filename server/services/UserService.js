@@ -1,6 +1,7 @@
 // code mau
 const User = require("../model/User");
 const bcrypt = require("bcryptjs");
+const Major = require("../model/Major");
 class UserService {
   async checkUser(user) {
     console.log(user.email);
@@ -63,9 +64,9 @@ class UserService {
       const filter = search ? { email: { $regex: search, $options: "i" } } : {};
 
       const user = await User.find(filter)
+        .populate('major', 'name') // Populate tên ngành học
         .skip(skip)
         .limit(limit)
-        .select("email fullName phoneNumber dateOfBirth role createdAt");
 
       const total = await User.countDocuments();
       if (!user) {
@@ -96,7 +97,7 @@ class UserService {
 
   async updateProfile(userId, updateData) {
     try {
-      const { email, ...allowedUpdates } = updateData;
+      const { email, password, currentPassword, ...allowedUpdates } = updateData;
 
       const allowedFields = [
         "fullName",
@@ -111,6 +112,13 @@ class UserService {
           filteredUpdates[key] = allowedUpdates[key];
         }
       });
+
+      if (password && currentPassword) {
+        const passwordChangeResult = await this.changePassword(userId, currentPassword, password);
+        if (!passwordChangeResult.success) {
+          return passwordChangeResult;
+        }
+      }
 
       const updatedUser = await User.findByIdAndUpdate(
         userId,
@@ -180,6 +188,49 @@ class UserService {
       };
     }
   }
+  async changePassword(userId, currentPassword, newPassword) {
+    try {
+      const user = await User.findById(userId);
+      if (!user) {
+        return {
+          success: false,
+          message: "Không tìm thấy người dùng",
+        };
+      }
+
+      const isMatch = await bcrypt.compare(currentPassword, user.password);
+      if (!isMatch) {
+        return {
+          success: false,
+          message: "Mật khẩu hiện tại không đúng",
+        };
+      }
+
+      const isSamePassword = await bcrypt.compare(newPassword, user.password);
+      if (isSamePassword) {
+        return {
+          success: false,
+          message: "Mật khẩu mới không được trùng với mật khẩu cũ",
+        };
+      }
+
+      user.password = newPassword;
+      await user.save();
+
+      return {
+        success: true,
+        message: "Đổi mật khẩu thành công!",
+      };
+    } catch (error) {
+      console.log(error.message);
+      return {
+        success: false,
+        message: "Đổi mật khẩu thất bại",
+      };
+    }
+  }
 }
+
+
 
 module.exports = new UserService();
