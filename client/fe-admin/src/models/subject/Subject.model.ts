@@ -1,3 +1,14 @@
+// Document data model
+export interface Document {
+  _id: string;
+  originalName: string;
+  fileName: string;
+  fileUrl: string;
+  fileSize: number;
+  mimeType: string;
+  uploadedAt: string;
+}
+
 // Subject data model
 export interface Subject {
   _id: string;
@@ -5,6 +16,7 @@ export interface Subject {
   name: string;
   description: string;
   credits: number;
+  documents?: Document[];
   createdAt: string;
   updatedAt: string;
 }

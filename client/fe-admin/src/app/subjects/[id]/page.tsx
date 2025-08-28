@@ -1,13 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { useParams, useRouter } from "next/navigation";
-import { toast } from "sonner";
-import { ArrowLeft, Edit, Trash2 } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Separator } from "@/components/ui/separator";
+import DocumentManager from "@/components/subject/DocumentManager";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -19,21 +12,29 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Separator } from "@/components/ui/separator";
 import { Textarea } from "@/components/ui/textarea";
 import subjectService from "@/lib/services/subject/subject.service";
 import {
   Subject,
-  UpdateSubjectRequest,
   SubjectValidationErrors,
-} from "@/models/subject";
+  UpdateSubjectRequest,
+} from "@/models/subject/Subject.model";
+import { ArrowLeft, Edit, Trash2 } from "lucide-react";
+import { useParams, useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import { toast } from "sonner";
 
 export default function SubjectDetailPage() {
   const params = useParams();
@@ -196,8 +197,8 @@ export default function SubjectDetailPage() {
               <AlertDialogHeader>
                 <AlertDialogTitle>Xác nhận xóa</AlertDialogTitle>
                 <AlertDialogDescription>
-                  Bạn có chắc chắn muốn xóa môn học "{subject.name}"? Hành động
-                  này không thể hoàn tác.
+                  Bạn có chắc chắn muốn xóa môn học &quot;{subject.name}
+                  &quot;? Hành động này không thể hoàn tác.
                 </AlertDialogDescription>
               </AlertDialogHeader>
               <AlertDialogFooter>
@@ -263,6 +264,14 @@ export default function SubjectDetailPage() {
               </div>
             </CardContent>
           </Card>
+
+          {/* Documents Section */}
+          <DocumentManager
+            subjectId={subjectId}
+            subjectCode={subject.subjectCode}
+            documents={subject.documents}
+            onDocumentsChange={loadSubject}
+          />
         </div>
 
         {/* Metadata */}

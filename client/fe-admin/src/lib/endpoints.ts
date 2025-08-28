@@ -6,7 +6,7 @@ export class Endpoints {
     FORGOT_PASSWORD: "auth/forgot-password",
     CHANGE_PASSWORD: "auth/change-password",
     VERIFY_FORGOT_PASSWORD: "auth/verify-otp-reset-password",
-    
+
     REGISTER: "auth/register",
     VERIFY_REGISTRATION_OTP: "auth/verify-registration-otp",
     RESEND_REGISTRATION_OTP: "auth/resend-registration-otp",
@@ -23,44 +23,59 @@ export class Endpoints {
     GET_STATS: "subjects/stats",
     GET_BY_CREDITS: "subjects/credits",
   };
+
+  static readonly Document = {
+    // Subject documents
+    UPLOAD: (subjectId: string) => `documents/subjects/${subjectId}/documents`,
+    GET_BY_SUBJECT: (subjectId: string) =>
+      `documents/subjects/${subjectId}/documents`,
+    DELETE: (subjectId: string, documentId: string) =>
+      `documents/subjects/${subjectId}/documents/${documentId}`,
+    DOWNLOAD_ZIP: (subjectId: string) =>
+      `documents/subjects/${subjectId}/documents/download/zip`,
+    DOWNLOAD_SINGLE: (subjectId: string, documentId: string) =>
+      `documents/subjects/${subjectId}/documents/${documentId}/download`,
+
+    // Admin endpoints
+    CLEANUP: "documents/cleanup",
+  };
   static readonly User = {
-    GET_ALL: 'user/get-all',
-    ADD_USER: 'user/add-user'
-  }
+    GET_ALL: "user/get-all",
+    ADD_USER: "user/add-user",
+  };
 
   static readonly Class = {
-    GET_ALL: 'class/get-class',
-    ADD_CLASS: 'class/add-class',
-    GET_BY_ID: (id:string) => `class/get-class/${id}`,
-    UPDATE_CLASS: (id:string) => `class/update-class/${id}`,
-    DELETE_CLASS: (id:string) => `class/delete/${id}`
-  }
+    GET_ALL: "class/get-class",
+    ADD_CLASS: "class/add-class",
+    GET_BY_ID: (id: string) => `class/get-class/${id}`,
+    UPDATE_CLASS: (id: string) => `class/update-class/${id}`,
+    DELETE_CLASS: (id: string) => `class/delete/${id}`,
+  };
 
   static readonly Timeshchedule = {
-    GET_MY_SCHEDULE: 'timeschedule/my-schedule',
-    ASSIGN_SUBJECTS: 'registrations/assign',
-    CREATE_TIMESCHEDULE: 'schedules/create'
-  }
+    GET_MY_SCHEDULE: "timeschedule/my-schedule",
+    ASSIGN_SUBJECTS: "registrations/assign",
+    CREATE_TIMESCHEDULE: "schedules/create",
+  };
 
   static readonly Application = {
-    
     // Admin/Teacher endpoints
     GET_ALL: "applications",
     GET_BY_STUDENT: (studentId: string) => `applications/student/${studentId}`,
     PROCESS: (id: string) => `applications/${id}/process`,
-    
+
     // Statistics endpoints
     GET_STATS_OVERVIEW: "applications/stats/overview",
     GET_STATS_BY_TYPE: "applications/stats/by-type",
-    
+
     // Application types endpoints
     GET_TYPES_ALL: "applications/types/all",
-    GET_TYPES_BY_CATEGORY: (category: string) => `applications/types/category/${category}`,
+    GET_TYPES_BY_CATEGORY: (category: string) =>
+      `applications/types/category/${category}`,
     GET_CATEGORIES: "applications/types/categories",
   };
-  
 
   static readonly Dashboard = {
-    GET_STATISTICAL : 'dashboard'
-  }
+    GET_STATISTICAL: "dashboard",
+  };
 }

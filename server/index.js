@@ -4,6 +4,7 @@ const app = express();
 const path = require('path');
 const cors = require("cors");
 const connectDB = require("./config/db");
+const configureCloudinary = require("./config/cloudinary");
 const { secret } = require("./config/secret");
 const PORT = secret.port || 3000;
 const morgan = require('morgan')
@@ -11,8 +12,9 @@ const morgan = require('morgan')
 const globalErrorHandler = require("./middleware/global-error-handler");
 // routes
 
-const indexRouter =  require('./routes/index')
+const indexRouter = require('./routes/index')
 const userRoutes = require('./routes/user.routes');
+const documentRoutes = require('./routes/documentRoutes');
 // middleware
 app.use(cors());
 app.use(express.json());
@@ -22,8 +24,12 @@ app.use(express.static(path.join(__dirname, 'public')));
 // connect database
 connectDB();
 
+// configure cloudinary
+configureCloudinary();
+
 // API routes
 app.use('/api/users', userRoutes);
+app.use('/api/documents', documentRoutes);
 
 
 

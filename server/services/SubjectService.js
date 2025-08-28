@@ -128,9 +128,26 @@ class SubjectService {
         }
     }
 
-    // Delete subject
+    async existSubjectInClass(id) {
+        try {
+            const subject = await Subject.findById(id);
+            if (!subject) {
+                throw new ApiError(404, "Không tìm thấy môn học");
+            }
+            return subject.classes.length > 0;
+        } catch (error) {
+            if (error instanceof ApiError) {
+                throw error;
+            }
+            throw new ApiError(500, "Error checking subject in classes");
+        }
+    }
+
     async deleteSubject(id) {
         try {
+            if (await this.existSubjectInClass(id)) {
+                throw new ApiError(400, "Môn này đang được học");
+            }
             const subject = await Subject.findByIdAndDelete(id);
             if (!subject) {
                 throw new ApiError(404, "Subject not found");
@@ -162,6 +179,64 @@ class SubjectService {
             return subjects;
         } catch (error) {
             throw new ApiError(500, "Error fetching subjects by credits");
+        }
+    }
+
+    // Get subject with documents
+    async getSubjectWithDocuments(id) {
+        try {
+            const subject = await Subject.findById(id);
+            if (!subject) {
+                throw new ApiError(404, "Subject not found");
+            }
+            return subject;
+        } catch (error) {
+            if (error instanceof ApiError) {
+                throw error;
+            }
+            throw new ApiError(500, "Error fetching subject with documents");
+        }
+    }
+
+    // Get subjects with document count
+    async getSubjectsWithDocumentCount(query = {}) {
+        try {
+            const { page = 1, limit = 10, search = "", sortBy = "createdAt", sortOrder = "desc" } = query;
+
+            const filter = {};
+            if (search) {
+                filter.$or = [
+                    { subjectCode: { $regex: search, $options: 'i' } },
+                    { name: { $regex: search, $options: 'i' } },
+                    { description: { $regex: search, $options: 'i' } }
+                ];
+            }
+
+            const sortOptions = {};
+            sortOptions[sortBy] = sortOrder === 'desc' ? -1 : 1;
+
+            const subjects = await Subject.find(filter)
+                .sort(sortOptions)
+                .limit(limit * 1)
+                .skip((page - 1) * limit)
+                .exec();
+
+            const total = await Subject.countDocuments(filter);
+
+            // Add document count to each subject
+            const subjectsWithCount = subjects.map(subject => ({
+                ...subject.toObject(),
+                documentCount: subject.documents ? subject.documents.length : 0
+            }));
+
+            return {
+                subjects: subjectsWithCount,
+                totalPages: Math.ceil(total / limit),
+                currentPage: page,
+                total
+            };
+        } catch (error) {
+            throw new ApiError(500, "Error fetching subjects with document count");
         }
     }
 }
